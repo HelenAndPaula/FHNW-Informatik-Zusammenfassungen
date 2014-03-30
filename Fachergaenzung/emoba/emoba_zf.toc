@@ -17,7 +17,7 @@
 \contentsline {subsection}{\numberline {2.2.1}MVC vs MVVM}{10}
 \contentsline {subsection}{\numberline {2.2.2}Alternativen zu MVVM}{10}
 \contentsline {section}{\numberline {2.3}MVC in Cardbox}{10}
-\contentsline {section}{\numberline {2.4}MVVM muss das sein? (Denzler)}{10}
+\contentsline {section}{\numberline {2.4}MVVM muss das sein? (Denzler)}{11}
 \contentsline {chapter}{\numberline {3}Persistenz}{12}
 \contentsline {section}{\numberline {3.1}Vorteile/Nachteile Isolated Storage}{12}
 \contentsline {section}{\numberline {3.2}Isolated Storage API}{12}
