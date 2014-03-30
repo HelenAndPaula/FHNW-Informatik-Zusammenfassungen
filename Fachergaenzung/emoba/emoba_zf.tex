@@ -43,11 +43,7 @@ basicstyle=\ttfamily,
  numberstyle=\tiny,          % Stil der Zeilennummern
  stepnumber=5,              % Abstand zwischen den Zeilennummern
  numbersep=5pt,              % Abstand der Nummern zum Text
- tabsize=2,
-  basicstyle=\footnotesize\ttfamily
-   literate={ö}{{\"o}}
-           {ä}{{\"a}}
-           {ü}{{\"u}}
+ tabsize=2
 }
 \lstdefinelanguage{JavaScript}{
   keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, 
@@ -117,6 +113,18 @@ Neustart und eine Auferstehung einer App sollen/können sich voneinander untersc
 
 \newpage
 \subsection{Aufbau einer App}
+\subsubsection{Verzeichnisstruktur des Projektes}
+\begin{description}
+	\item[Properties:] WMAppManifest.xml legt Capabilities, Startseite, App Icon und Hintergrundbild fest
+	\item[References:] DLLs welche verwendete Klassen enthalten
+	\item[Images:] Enthält Icons und statisches Bildmaterial
+	\item[Views, ViewModels, Models:] Enthalten Klassen der entsprechenden Namespaces. Siehe MVVM
+	\item[Data:] Statische Daten
+\end{description}
+\subsubsection{App.xamls(.cs)}
+Reprsentiert die Appliktaion als Ganzes, henthält Handler-Implementation für die Application-Lifeclycle Events.
+\subsubsection{MainPage.xaml(.cs)}
+Die Startseite muss nicht MainPage heissen, sie muss aber im File WMAppManifest.xml festgelegt werden
 \begin{figure}[h!]
  \centering
  \includegraphics{./aufbau.png}
@@ -162,18 +170,17 @@ Eintreten auf der neuen Page ausgelöst. Der übergebene Eventparameter enthält
 die Zielpage! Nun ergeben die beiden Event-Handler Sinn:
 
 \begin{lstlisting}[caption=Navigation]
- protected override void OnNavigatedFrom(NavigationEventArgs{
-if (e.Content is QuestionPage)
-(e.Content as QuestionPage).Cardbox = this.cardbox;
-base.OnNavigatedFrom(e);
+protected override void OnNavigatedFrom(NavigationEventArgs e) {
+	if (e.Content is QuestionPage)
+		(e.Content as QuestionPage).Cardbox = this.cardbox;
+	base.OnNavigatedFrom(e);
 }
-e)
+
 //Beim Eintreffen auf der Target-Page kann die OnNavigatedTo-Methode notwendige Initialisierungen
 //vornehmen.
-protected override void OnNavigatedTo(NavigationEventArgs{
-DataContext = cardbox.CurrentCard;
+protected override void OnNavigatedTo(NavigationEventArgs e) {
+	DataContext = cardbox.CurrentCard;
 }
-e)
 
 \end{lstlisting}
 
@@ -190,10 +197,7 @@ nur auf Properties zugreifen. Will man, dass der gebundene Wert bei einer Änder
 wird, so benötigt man sogar Dependency Properties (siehe Petzold-Buch Kapitel 11, S. 296). Beispiel:
 
 \begin{lstlisting}[caption=Data Binding Example,language=xml]
- <TextBlockx:Name="LastAccess"
-Text="{Binding LastAccessed}"
-Style="{StaticResource contentStyle}"/>
-
+ <TextBlockx:Name="LastAccess" Text="{Binding LastAccessed}" Style="{StaticResource contentStyle}"/>
 \end{lstlisting}
 In diesem Textblock wird das Datum der letzten Änderung einer Kartei angezeigt. Das Attribut x:Name deklariert
 einen Namen, der im Code Behind File dann als Property der Page-Klasse zur Verfügung steht. Der Text wird von
@@ -293,7 +297,6 @@ Modells für die View auf kennt Views nicht . Many to One Beziehung ist möglich
  \includegraphics[scale=.40]{./proxy.png}
  % fpat.png: 0x0 pixel, -2147483648dpi, nanxnan cm, bb=
 \end{figure}
-\newpage
 \section{MVC in Cardbox}
 Ein Teil der Lernkartei-App dient im Folgenden zur Illustration, wie das MVVM-Pattern eingesetzt werden kann.
 Dabei wird vom folgenden Setup ausgegangen:
@@ -372,7 +375,7 @@ sollen, auch serialisierbar sind. D.h. sie müssen entweder das ISerializable im
 das Attribut [Serializable] markiert werden.
 
 \begin{lstlisting}[caption=Isolated Storage Settings]
- // appSettings is a Dictionary that can be persisted
+// appSettings is a Dictionary that can be persisted
 private IsolatedStorageSettings appSettings = IsolatedStorageSettings.ApplicationSettings;
 // remember email address
 appSettings.Add("email", "mad@fhnw.ch");
@@ -398,39 +401,30 @@ Wildcards gesucht werden. Siehe dazu auch How to: Perform Isolated Storage Tasks
 http://msdn.microsoft.com/en-us/library/cc265154(v=VS.95).aspx
 
 \begin{lstlisting}[caption=File Storage]
- public void StoreX(X someObject, string dirname, string filename)
-{
-IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
-storage.CreateDirectory(dirname);
-using (IsolatedStorageFileStream file = storage.CreateFile(Path.Combine(dirname, filename)))
-{
-XmlSerializer xml = new XmlSerializer(typeof(X));
-xml.Serialize(file, someObject);
+public void StoreX(X someObject, string dirname, string filename) {
+	IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+	storage.CreateDirectory(dirname);
+	using (IsolatedStorageFileStream file = storage.CreateFile(Path.Combine(dirname, filename))) {
+		XmlSerializer xml = new XmlSerializer(typeof(X));
+		xml.Serialize(file, someObject);
+	}
 }
+public X LoadX(string dirname, string filename) {
+	X result = null;
+	IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+	IsolatedStorageFileStream file = null;
+	try {
+		file = storage.OpenFile(Path.Combine(dirname, filename), FileMode.Open);
+		XmlSerializer xml = new XmlSerializer(typeof(X));
+		result = (X)xml.Deserialize(file);
+	} finally {
+		if (file != null) {
+			file.Close();
+			file.Dispose();
+		}
+	}
+	return result;
 }
-public X LoadX(string dirname, string filename)
-{
-X result = null;
-IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
-IsolatedStorageFileStream file = null;
-try
-{
-file = storage.OpenFile(Path.Combine(dirname, filename), FileMode.Open);
-XmlSerializer xml = new XmlSerializer(typeof(X));
-result = (X)xml.Deserialize(file);
-}
-finally
-{
-if (file != null)
-{
-file.Close();
-file.Dispose();
-}
-}
-return result;
-}
-
-
 \end{lstlisting}
 Zu beachten ist, dass die XML-Serialisierung nur public Felder oder Properties speichern kann. Private oder
 protected Variablen werden also nicht gespeichert.
@@ -496,7 +490,7 @@ nicht in XAML eine URL angeben muss
 
 \section{WebClient Klasse}
 \begin{lstlisting}[caption=Webclient]
- WebClient web = new WebClient();
+WebClient web = new WebClient();
 web.AllowReadStreamBuffering = false;
 web.OpenReadCompleted += new OpenReadCompletedEventHandler(DownloadCompleted);
 web.OpenReadAsync(new Uri("http://web.fhnw.ch/plattformen/mad/flashcards/overview.xml"));
@@ -528,15 +522,12 @@ grosses Speicherprofil der App.
 
 \subsection{OnCompleted Delegate}
 \begin{lstlisting}[caption=OnCompleted Webclient (Stream Copy)]
- public void DownloadCompleted(object sender, OpenReadCompletedEventArgs args)
-{
-  if (!args.Cancelled && args.Error == null)
-  byte[] buffer = new byte[4096];
-  using (IsolatedStorageFileStream file = storage.CreateFile(targetPath))
-  {
-
-    StreamUtils.Copy(args.Result, file, buffer);
-  }
+public void DownloadCompleted(object sender, OpenReadCompletedEventArgs args) {	
+	 if (!args.Cancelled && args.Error == null)	
+	 byte[] buffer = new byte[4096]; 
+	 using (IsolatedStorageFileStream file = storage.CreateFile(targetPath)) {
+		StreamUtils.Copy(args.Result, file, buffer);
+  	}
 }
 \end{lstlisting}
 
@@ -553,31 +544,26 @@ Eine Fehlbedienung wird dadurch eher unwahrscheinlich.
 \item gibt die Kontrolle an die frisch reaktivierte eigene App zurück.
 \end{itemize}
 \begin{lstlisting}[caption=Kamera Beispiel]
- public partial class MainPage : PhoneApplicationPage
-{
-CameraCaptureTask camera = new CameraCaptureTask();
-// Constructor
-public MainPage()
-{
-InitializeComponent();
-camera.Completed += AquirePicture;
-}
-void AquirePicture(object sender, PhotoResult args)
-{
-if (args.TaskResult == TaskResult.OK)
-{
-BitmapImage bmp = new BitmapImage();
-bmp.SetSource(args.ChosenPhoto);
-img.Source = bmp;
-}
-}
-private void ManipulationStarted(object sender, ManipulationStartedEventArgs e)
-{
-camera.Show();
-e.Complete();
-e.Handled = true;
-base.OnManipulationStarted(e);
-}
+public partial class MainPage : PhoneApplicationPage {
+	CameraCaptureTask camera = new CameraCaptureTask();
+	// Constructor
+	public MainPage() {
+		InitializeComponent();
+		camera.Completed += AquirePicture;
+	}
+	void AquirePicture(object sender, PhotoResult args) {
+		if (args.TaskResult == TaskResult.OK) {
+			BitmapImage bmp = new BitmapImage();
+			bmp.SetSource(args.ChosenPhoto);
+			img.Source = bmp;
+		}
+	}
+	private void ManipulationStarted(object sender, ManipulationStartedEventArgs e) {
+		camera.Show();
+		e.Complete();
+		e.Handled = true;
+		base.OnManipulationStarted(e);
+	}
 }
 \end{lstlisting}
 
