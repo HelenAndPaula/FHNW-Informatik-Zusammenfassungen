@@ -53,3 +53,4 @@
 \contentsline {chapter}{\numberline {9}Layout}{29}
 \contentsline {section}{\numberline {9.1}Grid Beispiel}{29}
 \contentsline {chapter}{\numberline {10}Isolated Storage}{30}
+\contentsline {chapter}{\numberline {11}App Lifecycle}{33}
