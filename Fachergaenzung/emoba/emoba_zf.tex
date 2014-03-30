@@ -844,4 +844,214 @@ Oberste prio sind Batterielaufzeit sowohl als Rechenleistung. Alles andere wird 
 Eine Applikation sollte immer auch ohne die Multitasking-Eigenschaften sinnvoll funktionieren können.
 Die Illusion von Multitasking ist für den Benutzer gerade so gut wie echtes Multitasking!
 \part{Code}
+\chapter{Binding + Property Changed}
+\begin{lstlisting}[caption=Viewmodel + Umgang mit Property Changed]
+namespace Flashcards05.ViewModels
+{
+    public class DownloadViewModel : INotifyPropertyChanged
+    {
+		   public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (null != handler)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        
+           public bool IsDownloadInProgress
+        {
+            get
+            {
+                return _isDownloadInProgress;
+            }
+
+            private set
+            {
+                if (value != _isDownloadInProgress)
+                {
+                    _isDownloadInProgress = value;
+                    ProgressVisibility = _isDownloadInProgress ? Visibility.Visible : Visibility.Collapsed;
+                    NotifyPropertyChanged("IsDownloadInProgress");
+                    NotifyPropertyChanged("ProgressVisibility");
+                }
+            }
+        }    
+    }
+
+    
+    }
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Binding, language=xml]
+<ProgressBar x:Name="progress" 
+                         IsIndeterminate="{Binding IsDownloadInProgress}" 
+                         Visibility="{Binding ProgressVisibility}"
+                         Grid.Row="0"
+                         Style="{StaticResource CustomIndeterminateProgressBar}"/>
+\end{lstlisting}
+
+\section{Binding mit Converters (vom Internet - nicht abgedeckt von Denzler)}
+\begin{lstlisting}
+using System;
+using System.Windows.Data;
+ 
+namespace App.Converters
+{
+    public class BooleanToVisibilityConverter : IValueConverter
+    {
+        readonly Random _generator = new Random();
+ 
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            bool actualValue = (bool) value;
+            if (actualValue) return Visibility.Visible;
+            return Visibility.Collapsed;
+        }
+ 
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return null;
+        }
+    }
+}
+\end{lstlisting}
+
+\textbf{Folgendes bei Namespace Deklarationen im View hinzufügen} 
+\begin{verbatim}
+xmlns:converters="clr-namespace:App.Converters"
+\end{verbatim}
+
+\textbf{Folgendes Nach der Namespace Deklaration im View}
+\begin{lstlisting}[language=xml]
+<phone:PhoneApplicationPage.Resources>
+  <converters:BooleanToVisibilityConverter x:Name="MyConverter">
+</phone:PhoneApplicationPage.Resources>
+\end{lstlisting}
+\begin{lstlisting}
+ <TextBlock x:Name="MyInvisibleTextBlock" Visibility="{Binding MyBooleanProperty, Converter={StaticResource MyConverter}"}
+\end{lstlisting}
+
+\chapter{Layout }
+\section{Grid Beispiel}
+\begin{lstlisting}[language=xml]
+ <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+           <Grid.RowDefinitions>
+               <RowDefinition Height="Auto"/>
+               <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Image x:Name="MyImage" Grid.Row="0" Height="200" Source="{Binding Image}" />
+            <TextBlock Grid.Row="1" x:Name="question" Text="{Binding Question}" Style="{StaticResource labelStyle}" VerticalAlignment="Top" Margin="6,6,0,0" HorizontalAlignment="Left" Width="444" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="2" HorizontalAlignment="Left" x:Name="answer" Text="{Binding Answer}" Style="{StaticResource labelStyle}" VerticalAlignment="Top" Width="444" Margin="6,106,0,0" TextWrapping="Wrap" />
+        </Grid>
+
+\end{lstlisting}
+\chapter{Isolated Storage}
+\begin{lstlisting}[caption=Saveable object Example]
+namespace Flashcards05.Models
+{
+//Contract for Saveable Class
+    [DataContract] 
+    public class Card
+    {
+
+        public Card(string question, string answer, string imgpath)
+        {
+            Question = question;
+            Answer = answer;
+            ImagePath = imgpath;
+          
+        }
+//Annotation for saveable property, must be public.
+        [DataMember] 
+        public string Question { get;  set; }
+        [DataMember] 
+        public string Answer { get;  set; }
+        [DataMember] 
+        public string ImagePath { get; set; }
+
+        public BitmapImage actualImage { get; set; }
+    }
+\end{lstlisting}
+\begin{lstlisting}[caption=Loading and Saving]
+namespace Flashcards05.PersistentData
+{
+    public class Storage : IStorage
+    {
+        public T Load<T>(string filename, string directoryname) where T : class
+        {
+            T retVal = null;
+            String _filepath = System.IO.Path.Combine(directoryname, filename);
+            IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+            if (storage.FileExists(_filepath))
+                using (var sourceStream =
+                    storage.OpenFile(_filepath, FileMode.Open))
+                {
+                    DataContractSerializer _mySerializer = new DataContractSerializer(typeof (T));
+                    retVal = (T) _mySerializer.ReadObject(sourceStream);
+                }
+            return retVal;
+        }
+
+        public bool Save<T>(string filename, string directoryname, T serializableObject) where T : class
+        {
+            IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+            storage.CreateDirectory(directoryname);
+
+            string _filepath = System.IO.Path.Combine(directoryname, filename);
+            try
+            {
+                using (IsolatedStorageFileStream file = storage.CreateFile(_filepath))
+                {
+                    DataContractSerializer _mySerializer = new DataContractSerializer(typeof (T));
+                    _mySerializer.WriteObject(file, serializableObject);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Save object " + e.Message);
+                storage.DeleteFile(_filepath);
+                return false;
+            }
+            finally
+            {
+            }
+            return true;
+        }
+
+        public void SaveImage(StreamResourceInfo info, string basepath, Card card)
+        {
+            using (var ms = new MemoryStream())
+            {
+                StreamResourceInfo imgFile = App.GetResourceStream(info,
+                    new Uri(card.ImagePath, UriKind.Relative));
+                var bm = new BitmapImage();
+              
+                bm.SetSource(imgFile.Stream);
+                var wbm = new WriteableBitmap(bm);
+                wbm.SaveJpeg(ms,wbm.PixelWidth,wbm.PixelHeight,0,100);
+                Save(card.ImagePath, basepath + App.ImageFolder, ms.ToArray());
+            }
+
+
+        }
+
+        public BitmapImage LoadImage(string filename, string directoryname)
+        {
+            BitmapImage retVal = null;
+            var bytearray = Load<byte[]>(filename, directoryname);
+            using (var ms = new MemoryStream(bytearray, 0, bytearray.Length))
+            {
+               retVal = new BitmapImage();
+                retVal.SetSource(ms);
+            }
+            return retVal;
+
+        }
+    }
+}
+
+\end{lstlisting}
 \end{document}

@@ -48,3 +48,8 @@
 \contentsline {subsection}{\numberline {7.5.1}Limitierungen}{25}
 \contentsline {section}{\numberline {7.6}Fazit}{25}
 \contentsline {part}{\numberline {II}Code}{26}
+\contentsline {chapter}{\numberline {8}Binding + Property Changed}{27}
+\contentsline {section}{\numberline {8.1}Binding mit Converters (vom Internet - nicht abgedeckt von Denzler)}{28}
+\contentsline {chapter}{\numberline {9}Layout}{29}
+\contentsline {section}{\numberline {9.1}Grid Beispiel}{29}
+\contentsline {chapter}{\numberline {10}Isolated Storage}{30}
