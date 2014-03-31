@@ -182,6 +182,25 @@ protected override void OnNavigatedTo(NavigationEventArgs e) {
 	DataContext = cardbox.CurrentCard;
 }
 
+private void OnLearnClick(object sender, EventArgs e)
+        {
+            string destinationPage = "/Views/ExercisePage.xaml";
+            NavigationService.Navigate(new Uri(destinationPage + "?selectedItem=" + _cardset.Filename, UriKind.Relative));
+            
+        }
+        
+            protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            string filename = "";
+            if (NavigationContext.QueryString.TryGetValue("selectedItem", out filename))
+            {
+               ......
+            }
+        }
+        
+        
+        
+
 \end{lstlisting}
 
 \section{Data Binding}

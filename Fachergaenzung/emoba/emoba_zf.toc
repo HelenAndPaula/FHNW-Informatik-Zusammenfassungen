@@ -9,7 +9,7 @@
 \contentsline {subsubsection}{MainPage.xaml(.cs)}{6}
 \contentsline {subsection}{\numberline {1.1.3}XAML Guide}{7}
 \contentsline {subsection}{\numberline {1.1.4}Navigation}{7}
-\contentsline {section}{\numberline {1.2}Data Binding}{7}
+\contentsline {section}{\numberline {1.2}Data Binding}{8}
 \contentsline {subsection}{\numberline {1.2.1}Bemerkungen f\IeC {\"u}r Entwicklung}{8}
 \contentsline {chapter}{\numberline {2}MVVM}{9}
 \contentsline {section}{\numberline {2.1}Einf\IeC {\"u}hrung}{9}
