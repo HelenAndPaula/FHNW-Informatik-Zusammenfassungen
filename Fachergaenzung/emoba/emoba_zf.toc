@@ -55,3 +55,4 @@
 \contentsline {chapter}{\numberline {10}Isolated Storage}{30}
 \contentsline {chapter}{\numberline {11}App Lifecycle}{33}
 \contentsline {chapter}{\numberline {12}File Transfers}{36}
+\contentsline {chapter}{\numberline {13}Periodic + Resource Intensive Task}{39}

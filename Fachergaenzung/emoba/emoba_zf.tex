@@ -140,7 +140,7 @@ Die Startseite muss nicht MainPage heissen, sie muss aber im File WMAppManifest.
 d (designer) und mc (markup compatibility) sind Namespacedeklarationen die von
 Designwerkzeugen wie Blend oder VisualStudio verwendet werden.
 FontFamily, FontSize und Foreground: Einstellungen für die ganze Seite. Diese
-Einstellungen werden an die inneren Elemente „vererbt“, müssen dort also nicht
+Einstellungen werden an die inneren Elemente „vererbt", müssen dort also nicht
 erneut gesetzt werden. Sie können allerdings überschrieben werden.
 erneut gesetzt werden. Sie können allerdings überschrieben werden.
 SupportedOrientations und Orientation: Geben die möglichen und die Default-Orientierung an.
@@ -185,7 +185,8 @@ protected override void OnNavigatedTo(NavigationEventArgs e) {
 private void OnLearnClick(object sender, EventArgs e)
         {
             string destinationPage = "/Views/ExercisePage.xaml";
-            NavigationService.Navigate(new Uri(destinationPage + "?selectedItem=" + _cardset.Filename, UriKind.Relative));
+            NavigationService.Navigate(new Uri(destinationPage + "?selectedItem=" + _cardset.Filename, 
+UriKind.Relative));
             
         }
         
@@ -205,7 +206,7 @@ private void OnLearnClick(object sender, EventArgs e)
 
 \section{Data Binding}
 XAML ist keine Programmiersprache, es ist nicht möglich Programmlogik in XAML zu schreiben. Dazu sind die
-*.xaml.cs-Files da. Da steckt der sogenannte „Code Behind“ drin. C\# kennt das Konzept von partiellen Klassen,
+*.xaml.cs-Files da. Da steckt der sogenannte „Code Behind" drin. C\# kennt das Konzept von partiellen Klassen,
 d.h. eine Klasse muss nicht vollständig in einem File programmiert werden. Dieses Feature wurde mit XAML
 eingeführt, denn es ermöglicht es, die XAML-Seiten in C\#-Code umzuwandeln. Dies ist die eine Hälfte der
 partiellen Klassen. Die andere Hälfte sind die eben erwähnten *.xaml.cs-Files.
@@ -221,7 +222,7 @@ wird, so benötigt man sogar Dependency Properties (siehe Petzold-Buch Kapitel 1
 In diesem Textblock wird das Datum der letzten Änderung einer Kartei angezeigt. Das Attribut x:Name deklariert
 einen Namen, der im Code Behind File dann als Property der Page-Klasse zur Verfügung steht. Der Text wird von
 einem Property namens LastAccessed geholt. Doch auf welchem Objekt ist dieses Property verfügbar? Dies wird
-im Property DataContext angegeben, die jede XAML-„Klasse“ besitzt.
+im Property DataContext angegeben, die jede XAML-„Klasse" besitzt.
 
 %diagram nicht funktioniert
 
@@ -261,11 +262,11 @@ Warum?
 \section{MVVM}
 Der Einsatz des MVC-Prinzips in mobilen Applikationen sollen hier am Beispiel von Phone7 GUI-Technologien
 erläutert werden. Auf anderen Plattformen mag die GUI-Beschreibungssprache anders aussehen (Proprietär,
-HTML5, etc.) oder Technologien wie das Data Binding müssen „von Hand“ implementiert werden. Das Prinzip ist
+HTML5, etc.) oder Technologien wie das Data Binding müssen „von Hand" implementiert werden. Das Prinzip ist
 aber oft sehr ähnlich.
 Wenn das GUI hauptsächlich deklarativ entwickelt wird, dann stellt sich die Frage, wo die GUI-Logik
 implementiert werden soll. Also all die Logik, die auf Benutzereingaben reagiert oder Daten zur Anzeige
-aufbereitet oder „veredelt“. Microsoft gibt die Antwort indem eine eigene Variante des MVC-Patterns
+aufbereitet oder „veredelt". Microsoft gibt die Antwort indem eine eigene Variante des MVC-Patterns
 eingesetzt wird. Es ist eine Art doppeltes Observer-Pattern und besteht aus:
 
 \begin{description}
@@ -274,7 +275,7 @@ und lediglich dazu dienen die Events vom GUI an ein ViewModel weiterzuleiten. Di
 einzig für die Darstellung zuständig. Diese kann allerdings sehr aufwändig sein, z.B. weil sie
 Animationen enthält.
 
-\item[ViewModel] Die View „denkt“ sie kommuniziere direkt mit dem Modell. Diese Illusion wird durch
+\item[ViewModel] Die View „denkt" sie kommuniziere direkt mit dem Modell. Diese Illusion wird durch
 sogenannte ViewModels erzeugt. Sie stehen zwischen der View und dem Model. Sie haben
 folgende Verantwortlichkeiten:
 
@@ -298,10 +299,13 @@ notifizieren.
 Model &  Verschikt updates direkt and der View - Observer zwischen View und 
 Model & Kann View Model bei Callbakcs informieren jedoch nur bei einem Request im Webapps. Falls Model auf Phone ist,
 sind direkter Updates möglich \\ \hline
-View & Stellt nur dat, kann bei Model direkt Zustand abfrage. Kennt Controller nicht. & Stellt nur dar. Verwendet Binding im Daten von Biew Model zu 
+View & Stellt nur dat, kann bei Model direkt Zustand abfrage. Kennt Controller nicht. & Stellt nur dar. Verwendet 
+Binding im Daten von Biew Model zu 
 hohlen. View denkt dass das ViewModel sein Model ist.\\ \hline
-Controller & verwaltet Input und koordiniert updates der View, leitet Input bei bedarf weiter an Modell. & (View Model) Bereitet die Daten des 
-Modells für die View auf kennt Views nicht . Many to One Beziehung ist möglich zwischen Views und VM sollte aber vermeidet werden. \\ \hline
+Controller & verwaltet Input und koordiniert updates der View, leitet Input bei bedarf weiter an Modell. & (View Model) 
+Bereitet die Daten des 
+Modells für die View auf kennt Views nicht . Many to One Beziehung ist möglich zwischen Views und VM sollte aber 
+vermeidet werden. \\ \hline
 
 \end{tabular}
 
@@ -387,7 +391,7 @@ gemeinsame Zugriff mit speziellen Schutzmechanismen versehen werden muss.
 
 \subsection{Settings}
 Wie der Name es schon andeutet, diese Variante ist vor allem geeignet um Applikationssettings persistent zu
-speichern. Oder andere „kleine“ Objekte, bzw. „kleine“ Datenstrukturen. Beim IsolatedStorageSettings-Objekt
+speichern. Oder andere „kleine" Objekte, bzw. „kleine" Datenstrukturen. Beim IsolatedStorageSettings-Objekt
 handelt es sich um ein gewöhnliches Dictionary (zu gut Java: HashMap), welches mit der Methode save() in den
 persistenten Speicher hinein serialisiert wird. Es ist daher nötig, dass alle Objekte die so gespeichert werden
 sollen, auch serialisierbar sind. D.h. sie müssen entweder das ISerializable implementieren oder durch
@@ -588,8 +592,8 @@ public partial class MainPage : PhoneApplicationPage {
 
 \section{Tombstoning und Tasks}
 die App wurde ja beendet und neu gestartet. Es kann also nicht sein, dass
-einfach die Callback-Methode aufgerufen wird, denn bei einem Neustart wird die App ja zuerst initialisiert.“
-Stimmt! Deshalb ist die offizielle „Best Practice“ folgende:
+einfach die Callback-Methode aufgerufen wird, denn bei einem Neustart wird die App ja zuerst initialisiert."
+Stimmt! Deshalb ist die offizielle „Best Practice" folgende:
 \begin{itemize}
 
 \item Den CaptureTask als Attribut in der Klasse definieren. Dann steht sie nämlich sowohl dem Konstruktor
@@ -686,7 +690,7 @@ App (I)
 Einfach, nicht?!
 
 Der PNS liefert die Notifikationen die aus verschiedenen Quellen stammen können an den Push Client in
-Paketen so bald wie möglich. Was „so bald wie möglich“ genau bedeutet ist nicht festgelegt. Ja, es gibt KEINE
+Paketen so bald wie möglich. Was „so bald wie möglich" genau bedeutet ist nicht festgelegt. Ja, es gibt KEINE
 GARANTIE, dass Notifications überhaupt ausgeliefert werden. D.h. eine App sollte immer so gestaltet sein, dass
 sie auch ohne Push Notifications auskommt, bzw. dass der Verlust von Push Notifications keine zentrale
 Funktionalität beeinträchtigt.
@@ -703,7 +707,7 @@ machen.
 Entwickler auf anderen mobilen Betriebssystemen hatten diese Probleme nicht. Da Android, Symbian, und
 Windows Mobile Multitasking kannten, war es ihnen möglich im Hintergrund ständig einen Service laufen zu
 lassen, der in regelmässigen Abständen ein Polling bei einem Server durchführte. So hatte der Benutzer eines
-solchen Smartphones den Eindruck, dass die Nachricht auf das Gerät „gepusht“ wurde.
+solchen Smartphones den Eindruck, dass die Nachricht auf das Gerät „gepusht" wurde.
 Apple iPhone und auch Microsofts Phone 7 haben aber absichtlich kein Multitasking vorgesehen – zumindest
 nicht für normale Entwickler. Im Kernel existiert auf beiden Systemen Multitasking. Interessanterweise hat nun
 auch Google seit Android 2.2 Push Notifications im Angebot. Warum denn eigentlich? Android bietet sehr wohl
@@ -735,28 +739,32 @@ Doch es gibt einige Ausnahmen. Die wichtigste Ausnahme vom Multitaskingverbot be
 mobilen Betriebssystems (OS) selber. Das OS könnte ohne echtes Multitasking (d.h. mehrere gleichzeitige
 Prozesse mit getrenntem Adressraum) kaum seine Funktionalität anbieten. Komplette Trennung von Apps oder
 auch nur die ständige Empfangsbereitschaft für eingehende Telefonanrufe oder SMS wären nicht realisierbar.
-Für „normale“ Apps stehen ein paar Tricks zur Verfügung um ein echtes Multitasking vorzutäuschen oder
+Für „normale" Apps stehen ein paar Tricks zur Verfügung um ein echtes Multitasking vorzutäuschen oder
 teilweise gar zuzulassen.
 \begin{description}
-\item[Fast Application Switching]Statt eine App bei einer Unterbrechung wirklich zu beenden und wieder neu zu starten, wird sie einfach
+\item[Fast Application Switching]Statt eine App bei einer Unterbrechung wirklich zu beenden und wieder neu zu starten, 
+wird sie einfach
 angehalten bleibt aber im Hauptspeicher erhalten. Beim Fortfahren entfällt somit eine teure Initialisierung
-\item[Scheduled Tasks] Tasks können in zwei Varianten im Hintergrund laufen: entweder in regelmässigen Abständen ganz kurz,
+\item[Scheduled Tasks] Tasks können in zwei Varianten im Hintergrund laufen: entweder in regelmässigen Abständen ganz 
+kurz,
 oder dann wenn das Phone durch den Task nicht belastet wird.
 \item[Scheduled Notifications] Erlaubt das Anzeigen von Erinnerungen zu bestimmten Zeitpunkten
 \item[Background Audio] Ermöglicht einer App Musik abzuspielen auch nachdem sie geschlossen wurde.
-\item[Background Filetransfer] Ein längerer Filetransfer (z.B. Download) wird fortgesetzt, auch wenn die startende App beendet wird.
+\item[Background Filetransfer] Ein längerer Filetransfer (z.B. Download) wird fortgesetzt, auch wenn die startende App 
+beendet wird.
 \end{description}
 
 \section{Fast Application Switiching}
 Tombstoning ist ein schwerfälliger Mechanismus, da die Applikation nicht nur angehalten wird. Vielmehr wird
 der Speicher den die Applikation belegte freigegeben. Dies bedeutet, dass bei einer Wiederauferstehung die
 Applikation wieder geladen werden muss. Fast Application Switching (FAS) beschleunigt diesen Vorgang, indem
-die Applikation nur angehalten, deren Speicher aber behalten wird. Bei einer Wiederaufnahme müssen lediglichdie Event-Handler (Activated und 
+die Applikation nur angehalten, deren Speicher aber behalten wird. Bei einer Wiederaufnahme müssen lediglichdie 
+Event-Handler (Activated und 
 OnNavigatedTo) durchlaufen werden. Im besten Falle haben diese überhaupt
 nichts zu tun. Mit der Einführung von FAS wurde auch das Application Lifecycle Modell angepasst:
 \pic{modl.png}
 Trotz FAS ist es nötig ein Tombstoning vorzubereiten. Dies deshalb, weil bei fehlendem Speicher die
-„schlafenden“ Applikationen (im Zustand Dormant) aus dem Speicher geworfen werden. Falls kein Tombstoning
+„schlafenden" Applikationen (im Zustand Dormant) aus dem Speicher geworfen werden. Falls kein Tombstoning
 vorgesehen war, fehlt eine sinnvolle Implementation der Activated-Methode und damit kehrt die Applikation
 unter Umständen nicht in den erwarteten Zustand zurück.
 
@@ -834,7 +842,7 @@ BackgroundTransferRequest erstellt und mit den nötigen Informationen abgefüllt
 Quelle und Ziel des Transfers, die Methode (HTTP oder HTTPS) sowie weitere Details der Verbindung. Quelle
 und Ziel werden als URI und Verzeichnis/File im Isolated Storage angegeben, je nachdem ob es sich beim
 Transfer um einen Upload oder Download handelt.
-Ist der BackgroundTransferRequest fertig „ausgefüllt“ wird er dem BackgroundTransfer-
+Ist der BackgroundTransferRequest fertig „ausgefüllt" wird er dem BackgroundTransfer-
 Service übergeben. Dies ist im Prinzip eine Queue, die die Requests entgegennimmt. Beide Klassen sind im
 Namespace Microsoft.Phone.BackgroundTransfer zu finden.
 \subsection{Limitierungen}
@@ -929,7 +937,8 @@ namespace App.Converters
             return Visibility.Collapsed;
         }
  
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo 
+culture)
         {
             return null;
         }
@@ -949,7 +958,8 @@ xmlns:converters="clr-namespace:App.Converters"
 </phone:PhoneApplicationPage.Resources>
 \end{lstlisting}
 \begin{lstlisting}
- <TextBlock x:Name="MyInvisibleTextBlock" Visibility="{Binding MyBooleanProperty, Converter={StaticResource MyConverter}"}
+ <TextBlock x:Name="MyInvisibleTextBlock" Visibility="{Binding MyBooleanProperty, Converter={StaticResource 
+MyConverter}"}
 \end{lstlisting}
 
 \chapter{Layout }
@@ -962,8 +972,10 @@ xmlns:converters="clr-namespace:App.Converters"
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Image x:Name="MyImage" Grid.Row="0" Height="200" Source="{Binding Image}" />
-            <TextBlock Grid.Row="1" x:Name="question" Text="{Binding Question}" Style="{StaticResource labelStyle}" VerticalAlignment="Top" Margin="6,6,0,0" HorizontalAlignment="Left" Width="444" TextWrapping="Wrap" />
-            <TextBlock Grid.Row="2" HorizontalAlignment="Left" x:Name="answer" Text="{Binding Answer}" Style="{StaticResource labelStyle}" VerticalAlignment="Top" Width="444" Margin="6,106,0,0" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="1" x:Name="question" Text="{Binding Question}" Style="{StaticResource labelStyle}" 
+VerticalAlignment="Top" Margin="6,6,0,0" HorizontalAlignment="Left" Width="444" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="2" HorizontalAlignment="Left" x:Name="answer" Text="{Binding Answer}" 
+Style="{StaticResource labelStyle}" VerticalAlignment="Top" Width="444" Margin="6,106,0,0" TextWrapping="Wrap" />
         </Grid>
 
 \end{lstlisting}
@@ -1101,7 +1113,8 @@ public App()
 
                 // Disable the application idle detection by setting the UserIdleDetectionMode property of the
                 // application's PhoneApplicationService object to Disabled.
-                // Caution:- Use this under debug mode only. Application that disables user idle detection will continue to run
+                // Caution:- Use this under debug mode only. Application that disables user idle detection will continue 
+to run
                 // and consume battery power when the user is not using the phone.
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
@@ -1323,6 +1336,675 @@ exceeded. ");
     } 
 } 
 \end{lstlisting}
+\chapter{Periodic + Resource Intensive Task}
+\begin{lstlisting}[caption=PeriodicTask in App]
+ /****************************** Module Header ******************************\ 
+Module Name:  MainPage.xaml.cs 
+Project:      CSWP7ScheduledDemo 
+Copyright (c) Microsoft Corporation. 
+ 
+This example demonstrates how to use Scheduled Task in Windows phone 7. 
+It mainly covers 3 parts: 
+ 
+1.       How to create a scheduled task. 
+2.       How to catch the variety errors threw by scheduled task. 
+3.       How to set the process safe by class Mutex. 
+   
+This source is subject to the Microsoft Public License. 
+See http://www.microsoft.com/en-us/openness/licenses.aspx#MPL 
+All other rights reserved. 
+ 
+THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,  
+EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED  
+WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE. 
+\***************************************************************************/ 
+ 
+using System; 
+using System.Windows; 
+using System.Windows.Controls; 
+using System.Windows.Documents; 
+using System.Windows.Input; 
+using System.Windows.Media; 
+using System.Windows.Media.Animation; 
+using System.Windows.Shapes; 
+using Microsoft.Phone.Controls; 
+using Microsoft.Phone.Scheduler; 
+using System.Threading; 
+using System.IO.IsolatedStorage; 
+ 
+namespace ScheduledDemo 
+{ 
+    public partial class MainPage : PhoneApplicationPage 
+    { 
+        // Constructor 
+        public MainPage() 
+        { 
+            InitializeComponent(); 
+        } 
+        private void StartPeriodicTask() 
+        { 
+            PeriodicTask periodicTask = new PeriodicTask("PeriodicTaskDemo"); 
+            periodicTask.Description = "Are presenting a periodic task"; 
+            try 
+            { 
+                ScheduledActionService.Add(periodicTask); 
+                ScheduledActionService.LaunchForTest("PeriodicTaskDemo", TimeSpan.FromSeconds(3)); 
+                MessageBox.Show("Open the background agent success"); 
+            } 
+            catch (InvalidOperationException exception) 
+            { 
+                if (exception.Message.Contains("exists already")) 
+                { 
+                    MessageBox.Show("Since then the background agent success is already running"); 
+                } 
+                if (exception.Message.Contains("BNS Error: The action is disabled")) 
+                { 
+                    MessageBox.Show("Background processes for this application has been prohibited"); 
+                } 
+                if (exception.Message.Contains("BNS Error: The maximum number of ScheduledActions of this type has 
+already been added.")) 
+                { 
+                    MessageBox.Show("You open the daemon has exceeded the hardware limitations"); 
+                } 
+            } 
+            catch (SchedulerServiceException) 
+            { 
+ 
+            } 
+        } 
+        private void StopPeriodicTask() 
+        { 
+            try 
+            { 
+                ScheduledActionService.Remove("PeriodicTaskDemo"); 
+                MessageBox.Show("Turn off the background agent successfully"); 
+            } 
+            catch (InvalidOperationException exception) 
+            { 
+                if (exception.Message.Contains("doesn't exist")) 
+                { 
+                    MessageBox.Show("Since then the background agent success is not running"); 
+                } 
+            } 
+            catch (SchedulerServiceException) 
+            { 
+                  
+            }  
+        } 
+        private void StartPeriodicTask_Click(object sender, RoutedEventArgs e) 
+        { 
+            StartPeriodicTask(); 
+            SetData(); 
+        } 
+        private void StopPeriodicTask_Click(object sender, RoutedEventArgs e) 
+        { 
+            StopPeriodicTask(); 
+        } 
+        public void SetData() 
+        { 
+            Mutex mutex = new Mutex(false, "ScheduledAgentData"); 
+            mutex.WaitOne(); 
+            IsolatedStorageSettings setting = IsolatedStorageSettings.ApplicationSettings; 
+            if (!setting.Contains("ScheduledAgentData")) 
+            { 
+                setting.Add("ScheduledAgentData", "Foreground data"); 
+            } 
+            mutex.ReleaseMutex(); 
+        } 
+    } 
+}
+\end{lstlisting}
+\begin{lstlisting}[caption=Agent]
+ /****************************** Module Header ******************************\ 
+Module Name:  MainPage.xaml.cs 
+Project:      CSWP7ScheduledDemo 
+Copyright (c) Microsoft Corporation. 
+ 
+This example demonstrates how to use Scheduled Task in Windows phone 7. 
+It mainly covers 3 parts: 
+ 
+1.       How to create a scheduled task. 
+2.       How to catch the variety errors threw by scheduled task. 
+3.       How to set the process safe by class Mutex. 
+   
+This source is subject to the Microsoft Public License. 
+See http://www.microsoft.com/en-us/openness/licenses.aspx#MPL 
+All other rights reserved. 
+ 
+THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,  
+EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED  
+WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE. 
+\***************************************************************************/ 
+ 
+using System; 
+using System.Windows; 
+using System.Windows.Controls; 
+using System.Windows.Documents; 
+using System.Windows.Input; 
+using System.Windows.Media; 
+using System.Windows.Media.Animation; 
+using System.Windows.Shapes; 
+using Microsoft.Phone.Controls; 
+using Microsoft.Phone.Scheduler; 
+using System.Threading; 
+using System.IO.IsolatedStorage; 
+ 
+namespace ScheduledDemo 
+{ 
+    public partial class MainPage : PhoneApplicationPage 
+    { 
+        // Constructor 
+        public MainPage() 
+        { 
+            InitializeComponent(); 
+        } 
+        private void StartPeriodicTask() 
+        { 
+            PeriodicTask periodicTask = new PeriodicTask("PeriodicTaskDemo"); 
+            periodicTask.Description = "Are presenting a periodic task"; 
+            try 
+            { 
+                ScheduledActionService.Add(periodicTask); 
+                ScheduledActionService.LaunchForTest("PeriodicTaskDemo", TimeSpan.FromSeconds(3)); 
+                MessageBox.Show("Open the background agent success"); 
+            } 
+            catch (InvalidOperationException exception) 
+            { 
+                if (exception.Message.Contains("exists already")) 
+                { 
+                    MessageBox.Show("Since then the background agent success is already running"); 
+                } 
+                if (exception.Message.Contains("BNS Error: The action is disabled")) 
+                { 
+                    MessageBox.Show("Background processes for this application has been prohibited"); 
+                } 
+                if (exception.Message.Contains("BNS Error: The maximum number of ScheduledActions of this type has 
+already been added.")) 
+                { 
+                    MessageBox.Show("You open the daemon has exceeded the hardware limitations"); 
+                } 
+            } 
+            catch (SchedulerServiceException) 
+            { 
+ 
+            } 
+        } 
+        private void StopPeriodicTask() 
+        { 
+            try 
+            { 
+                ScheduledActionService.Remove("PeriodicTaskDemo"); 
+                MessageBox.Show("Turn off the background agent successfully"); 
+            } 
+            catch (InvalidOperationException exception) 
+            { 
+                if (exception.Message.Contains("doesn't exist")) 
+                { 
+                    MessageBox.Show("Since then the background agent success is not running"); 
+                } 
+            } 
+            catch (SchedulerServiceException) 
+            { 
+                  
+            }  
+        } 
+        private void StartPeriodicTask_Click(object sender, RoutedEventArgs e) 
+        { 
+            StartPeriodicTask(); 
+            SetData(); 
+        } 
+        private void StopPeriodicTask_Click(object sender, RoutedEventArgs e) 
+        { 
+            StopPeriodicTask(); 
+        } 
+        public void SetData() 
+        { 
+            Mutex mutex = new Mutex(false, "ScheduledAgentData"); 
+            mutex.WaitOne(); 
+            IsolatedStorageSettings setting = IsolatedStorageSettings.ApplicationSettings; 
+            if (!setting.Contains("ScheduledAgentData")) 
+            { 
+                setting.Add("ScheduledAgentData", "Foreground data"); 
+            } 
+            mutex.ReleaseMutex(); 
+        } 
+    } 
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=ResourceIntensiveTask]
+ #define
+
+DEBUG_AGENT
+
+using  System.Windows;
+
+using Microsoft.Phone.Scheduler;
+
+using  Microsoft.Phone.Scheduler;
+
+using  Microsoft.Phone.Shell;
+
+using  System;
+
+namespace ScheduledTaskAgent1
+
+{
+
+public class ScheduledAgent : ScheduledTaskAgent
+
+{
+
+private static volatile bool _classInitialized;
+
+///<remarks>
+
+/// ScheduledAgent constructor, initializes the UnhandledException handler
+
+///</remarks>
+
+public ScheduledAgent()
+
+{
+
+if (!_classInitialized)
+
+{
+
+_classInitialized = true;
+
+// Subscribe to the managed exception handler
+
+Deployment.Current.Dispatcher.BeginInvoke(delegate
+
+{
+
+Application.Current.UnhandledException += ScheduledAgent_UnhandledException;
+
+});
+
+}
+
+}
+
+/// Code to execute on Unhandled Exceptions
+
+private void ScheduledAgent_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
+
+{
+
+if (System.Diagnostics.Debugger.IsAttached)
+
+{
+
+// An unhandled exception has occurred; break into the debugger
+
+System.Diagnostics.
+
+Debugger.Break();
+
+}
+
+}
 
 
+protected overridevoid OnInvoke(ScheduledTask task)
+
+{
+
+
+
+string toastMessage = "Hello WP7";
+
+if (task isPeriodicTask)
+
+{
+
+toastMessage = "Periodic task running.";
+
+}
+
+else
+
+{
+
+toastMessage = "Resource-intensive task running.";
+
+}
+
+// The toast will not be shown if the foreground application is running.
+
+ShellToast toast = newShellToast();
+
+toast.Title = "Background Agent Sample";
+
+toast.Content = toastMessage;
+
+toast.Show();
+
+#if
+
+DEBUG_AGENT
+
+ScheduledActionService.LaunchForTest(task.Name, TimeSpan.FromSeconds(60));
+
+#endif
+
+// Call NotifyComplete to let the system know is done working .
+
+NotifyComplete();
+
+}
+
+}
+
+}
+
+\end{lstlisting}
+\begin{lstlisting}
+ define DEBUG_AGENT
+
+using System;
+
+using  System.Collections.Generic;
+
+using System.Linq;
+
+using  System.Net;
+
+using  System.Windows;
+
+using  System.Windows.Controls;
+
+using  System.Windows.Documents;
+
+using  System.Windows.Input;
+
+using System.Windows.Media;
+
+using System.Windows.Media.Animation;
+
+using  System.Windows.Shapes;
+
+using  Microsoft.Phone.Controls;
+
+using  Microsoft.Phone.Scheduler;
+
+namespace ScheduledTask
+
+{
+
+public partial class MainPage : PhoneApplicationPage
+
+{
+
+PeriodicTask periodicTask;
+
+ResourceIntensiveTask resourceIntensiveTask;
+
+string periodicTaskName = "PeriodicAgent";
+
+string resourceIntensiveTaskName = "ResourceIntensiveAgent";
+
+public bool agentsAreEnabled = true;
+
+// Constructor
+
+public MainPage()
+
+{
+
+InitializeComponent();
+
+}
+
+private void StartPeriodicAgent()
+
+{
+
+agentsAreEnabled = true;
+
+periodicTask = ScheduledActionService.Find(periodicTaskName) asPeriodicTask;
+
+if (periodicTask != null)
+
+{
+
+RemoveAgent(periodicTaskName);
+
+}
+
+periodicTask = newPeriodicTask(periodicTaskName);
+
+periodicTask = newPeriodicTask(periodicTaskName);
+
+periodicTask.Description = "This demonstrates a periodic task.";
+
+// Place the call to add in a try block in case the user has disabled agents.
+
+try
+
+{
+
+ScheduledActionService.Add(periodicTask);
+
+PeriodicStackPanel.DataContext = periodicTask;
+
+// If debugging is enabled , use LaunchForTest to launch the agent in one minutes
+
+#if
+
+(DEBUG_AGENT)
+
+ScheduledActionService.LaunchForTest(periodicTaskName, TimeSpan.FromSeconds(60));
+
+#endif
+
+}
+
+catch (InvalidOperationException exception)
+
+{
+
+if (exception.Message.Contains("BNS Error: The action is disabled"))
+
+{
+
+MessageBox.Show("Bakcground agents for this application have been disabled by the user.");
+
+agentsAreEnabled = false;
+
+PeriodicCheckBox.IsChecked = false;
+
+}
+
+if (exception.Message.Contains("BNS Error: The maximum number of ScheduledActions of this type have already been 
+added."))
+
+{
+
+// No user action required.
+
+}
+
+PeriodicCheckBox.IsChecked = false;
+
+}
+
+catch (SchedulerServiceException)
+
+{
+
+PeriodicCheckBox.IsChecked =false;
+
+}
+
+}
+
+private void StartResourceIntensiveAgent()
+
+{
+
+agentsAreEnabled = true;
+
+resourceIntensiveTask =  ScheduledActionService.Find(resourceIntensiveTaskName) asResourceIntensiveTask;
+
+if (resourceIntensiveTask != null)
+
+{
+
+RemoveAgent(resourceIntensiveTaskName);
+
+}
+
+resourceIntensiveTask = newResourceIntensiveTask(resourceIntensiveTaskName);
+
+try
+
+{
+
+ScheduledActionService.Add(resourceIntensiveTask);
+
+ResourceIntensiveStackPanel.DataContext = resourceIntensiveTask;
+
+#if
+
+(DEBUG_AGENT)
+
+ScheduledActionService.LaunchForTest(resourceIntensiveTaskName, TimeSpan.FromSeconds(60));
+
+#endif
+
+}
+
+catch (InvalidOperationException exception)
+
+{
+
+if (exception.Message.Contains("BNS Error: The action is disabled"))
+
+{
+
+MessageBox.Show("Background agents for this application have been disabled by the user.");
+
+agentsAreEnabled = false;
+
+}
+
+ResourceIntensiveCheckBox.IsChecked = false;
+
+}
+
+catch (SchedulerServiceException)
+
+{
+
+ResourceIntensiveCheckBox.IsChecked = false;
+
+}
+
+}
+
+bool ignoreCheckBoxEvents = false;
+
+private void PeriodicCheckBox_Checked(object sender, RoutedEventArgs e)
+
+{
+
+if (ignoreCheckBoxEvents)
+
+return;
+
+StartPeriodicAgent();
+
+}
+
+private void PeriodicCheckBox_Unchecked(object sender, RoutedEventArgs e)
+
+{
+
+if (ignoreCheckBoxEvents)
+
+     return;
+
+RemoveAgent(periodicTaskName);
+
+}
+
+private void ResourceIntensiveCheckBox_Checked(object sender, RoutedEventArgs e)
+
+{
+
+if (ignoreCheckBoxEvents)
+
+return;
+
+RemoveAgent(resourceIntensiveTaskName);
+
+}
+
+private void ResourceIntensiveCheckBox_Unchecked(object sender, RoutedEventArgs e)
+
+{
+
+if (ignoreCheckBoxEvents)
+
+return;
+
+RemoveAgent(resourceIntensiveTaskName);
+
+}
+
+private void RemoveAgent(string name)
+
+{
+
+    try
+
+{
+
+ScheduledActionService.Remove(name);
+
+}
+
+catch (Exception)
+
+{
+
+}
+
+}
+
+protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+
+{
+
+ignoreCheckBoxEvents = true;
+
+periodicTask = ScheduledActionService.Find(periodicTaskName) as PeriodicTask;
+
+     if (periodicTask != null)
+
+{
+
+PeriodicStackPanel.DataContext = periodicTask;
+
+}
+
+resourceIntensiveTask = ScheduledActionService.Find(resourceIntensiveTaskName) as ResourceIntensiveTask;
+
+   if (resourceIntensiveTask != null)
+
+{
+
+ResourceIntensiveStackPanel.DataContext = resourceIntensiveTask;
+
+}
+
+ignoreCheckBoxEvents = false;
+
+}
+\end{lstlisting}
+
+  
 \end{document}
