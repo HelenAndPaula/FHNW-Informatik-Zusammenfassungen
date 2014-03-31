@@ -43,11 +43,7 @@ basicstyle=\ttfamily,
  numberstyle=\tiny,          % Stil der Zeilennummern
  stepnumber=5,              % Abstand zwischen den Zeilennummern
  numbersep=5pt,              % Abstand der Nummern zum Text
- tabsize=2,
-  basicstyle=\footnotesize\ttfamily
-   literate={ö}{{\"o}}
-           {ä}{{\"a}}
-           {ü}{{\"u}}
+ tabsize=2
 }
 \lstdefinelanguage{JavaScript}{
   keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, 
@@ -64,9 +60,12 @@ break},
   morestring=[b]',
   morestring=[b]"
 }
+\usepackage{fancyhdr}
 \begin{document}
 \maketitle
 \tableofcontents
+\pagestyle{fancy}
+\part{Theorie}
 \chapter{Applikationsmodell}
 \begin{itemize}
  \item Applikation hat verschiedene Zustände
@@ -114,6 +113,18 @@ Neustart und eine Auferstehung einer App sollen/können sich voneinander untersc
 
 \newpage
 \subsection{Aufbau einer App}
+\subsubsection{Verzeichnisstruktur des Projektes}
+\begin{description}
+	\item[Properties:] WMAppManifest.xml legt Capabilities, Startseite, App Icon und Hintergrundbild fest
+	\item[References:] DLLs welche verwendete Klassen enthalten
+	\item[Images:] Enthält Icons und statisches Bildmaterial
+	\item[Views, ViewModels, Models:] Enthalten Klassen der entsprechenden Namespaces. Siehe MVVM
+	\item[Data:] Statische Daten
+\end{description}
+\subsubsection{App.xamls(.cs)}
+Reprsentiert die Appliktaion als Ganzes, henthält Handler-Implementation für die Application-Lifeclycle Events.
+\subsubsection{MainPage.xaml(.cs)}
+Die Startseite muss nicht MainPage heissen, sie muss aber im File WMAppManifest.xml festgelegt werden
 \begin{figure}[h!]
  \centering
  \includegraphics{./aufbau.png}
@@ -159,18 +170,36 @@ Eintreten auf der neuen Page ausgelöst. Der übergebene Eventparameter enthält
 die Zielpage! Nun ergeben die beiden Event-Handler Sinn:
 
 \begin{lstlisting}[caption=Navigation]
- protected override void OnNavigatedFrom(NavigationEventArgs{
-if (e.Content is QuestionPage)
-(e.Content as QuestionPage).Cardbox = this.cardbox;
-base.OnNavigatedFrom(e);
+protected override void OnNavigatedFrom(NavigationEventArgs e) {
+	if (e.Content is QuestionPage)
+		(e.Content as QuestionPage).Cardbox = this.cardbox;
+	base.OnNavigatedFrom(e);
 }
-e)
+
 //Beim Eintreffen auf der Target-Page kann die OnNavigatedTo-Methode notwendige Initialisierungen
 //vornehmen.
-protected override void OnNavigatedTo(NavigationEventArgs{
-DataContext = cardbox.CurrentCard;
+protected override void OnNavigatedTo(NavigationEventArgs e) {
+	DataContext = cardbox.CurrentCard;
 }
-e)
+
+private void OnLearnClick(object sender, EventArgs e)
+        {
+            string destinationPage = "/Views/ExercisePage.xaml";
+            NavigationService.Navigate(new Uri(destinationPage + "?selectedItem=" + _cardset.Filename, UriKind.Relative));
+            
+        }
+        
+            protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            string filename = "";
+            if (NavigationContext.QueryString.TryGetValue("selectedItem", out filename))
+            {
+               ......
+            }
+        }
+        
+        
+        
 
 \end{lstlisting}
 
@@ -187,10 +216,7 @@ nur auf Properties zugreifen. Will man, dass der gebundene Wert bei einer Änder
 wird, so benötigt man sogar Dependency Properties (siehe Petzold-Buch Kapitel 11, S. 296). Beispiel:
 
 \begin{lstlisting}[caption=Data Binding Example,language=xml]
- <TextBlockx:Name="LastAccess"
-Text="{Binding LastAccessed}"
-Style="{StaticResource contentStyle}"/>
-
+ <TextBlockx:Name="LastAccess" Text="{Binding LastAccessed}" Style="{StaticResource contentStyle}"/>
 \end{lstlisting}
 In diesem Textblock wird das Datum der letzten Änderung einer Kartei angezeigt. Das Attribut x:Name deklariert
 einen Namen, der im Code Behind File dann als Property der Page-Klasse zur Verfügung steht. Der Text wird von
@@ -283,14 +309,13 @@ Modells für die View auf kennt Views nicht . Many to One Beziehung ist möglich
 \begin{figure}[h!]
  \centering
  \includegraphics[scale=.40]{./fpat.png}
- % fpat.png: 0x0 pixel, -2147483648dpi, nanxnan cm, bb=
+	\caption{Facade}
 \end{figure}
 \begin{figure}[h!]
  \centering
  \includegraphics[scale=.40]{./proxy.png}
- % fpat.png: 0x0 pixel, -2147483648dpi, nanxnan cm, bb=
+\caption{Proxy}
 \end{figure}
-\newpage
 \section{MVC in Cardbox}
 Ein Teil der Lernkartei-App dient im Folgenden zur Illustration, wie das MVVM-Pattern eingesetzt werden kann.
 Dabei wird vom folgenden Setup ausgegangen:
@@ -369,7 +394,7 @@ sollen, auch serialisierbar sind. D.h. sie müssen entweder das ISerializable im
 das Attribut [Serializable] markiert werden.
 
 \begin{lstlisting}[caption=Isolated Storage Settings]
- // appSettings is a Dictionary that can be persisted
+// appSettings is a Dictionary that can be persisted
 private IsolatedStorageSettings appSettings = IsolatedStorageSettings.ApplicationSettings;
 // remember email address
 appSettings.Add("email", "mad@fhnw.ch");
@@ -395,39 +420,30 @@ Wildcards gesucht werden. Siehe dazu auch How to: Perform Isolated Storage Tasks
 http://msdn.microsoft.com/en-us/library/cc265154(v=VS.95).aspx
 
 \begin{lstlisting}[caption=File Storage]
- public void StoreX(X someObject, string dirname, string filename)
-{
-IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
-storage.CreateDirectory(dirname);
-using (IsolatedStorageFileStream file = storage.CreateFile(Path.Combine(dirname, filename)))
-{
-XmlSerializer xml = new XmlSerializer(typeof(X));
-xml.Serialize(file, someObject);
+public void StoreX(X someObject, string dirname, string filename) {
+	IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+	storage.CreateDirectory(dirname);
+	using (IsolatedStorageFileStream file = storage.CreateFile(Path.Combine(dirname, filename))) {
+		XmlSerializer xml = new XmlSerializer(typeof(X));
+		xml.Serialize(file, someObject);
+	}
 }
+public X LoadX(string dirname, string filename) {
+	X result = null;
+	IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+	IsolatedStorageFileStream file = null;
+	try {
+		file = storage.OpenFile(Path.Combine(dirname, filename), FileMode.Open);
+		XmlSerializer xml = new XmlSerializer(typeof(X));
+		result = (X)xml.Deserialize(file);
+	} finally {
+		if (file != null) {
+			file.Close();
+			file.Dispose();
+		}
+	}
+	return result;
 }
-public X LoadX(string dirname, string filename)
-{
-X result = null;
-IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
-IsolatedStorageFileStream file = null;
-try
-{
-file = storage.OpenFile(Path.Combine(dirname, filename), FileMode.Open);
-XmlSerializer xml = new XmlSerializer(typeof(X));
-result = (X)xml.Deserialize(file);
-}
-finally
-{
-if (file != null)
-{
-file.Close();
-file.Dispose();
-}
-}
-return result;
-}
-
-
 \end{lstlisting}
 Zu beachten ist, dass die XML-Serialisierung nur public Felder oder Properties speichern kann. Private oder
 protected Variablen werden also nicht gespeichert.
@@ -493,7 +509,7 @@ nicht in XAML eine URL angeben muss
 
 \section{WebClient Klasse}
 \begin{lstlisting}[caption=Webclient]
- WebClient web = new WebClient();
+WebClient web = new WebClient();
 web.AllowReadStreamBuffering = false;
 web.OpenReadCompleted += new OpenReadCompletedEventHandler(DownloadCompleted);
 web.OpenReadAsync(new Uri("http://web.fhnw.ch/plattformen/mad/flashcards/overview.xml"));
@@ -525,15 +541,12 @@ grosses Speicherprofil der App.
 
 \subsection{OnCompleted Delegate}
 \begin{lstlisting}[caption=OnCompleted Webclient (Stream Copy)]
- public void DownloadCompleted(object sender, OpenReadCompletedEventArgs args)
-{
-  if (!args.Cancelled && args.Error == null)
-  byte[] buffer = new byte[4096];
-  using (IsolatedStorageFileStream file = storage.CreateFile(targetPath))
-  {
-
-    StreamUtils.Copy(args.Result, file, buffer);
-  }
+public void DownloadCompleted(object sender, OpenReadCompletedEventArgs args) {	
+	 if (!args.Cancelled && args.Error == null)	
+	 byte[] buffer = new byte[4096]; 
+	 using (IsolatedStorageFileStream file = storage.CreateFile(targetPath)) {
+		StreamUtils.Copy(args.Result, file, buffer);
+  	}
 }
 \end{lstlisting}
 
@@ -550,31 +563,26 @@ Eine Fehlbedienung wird dadurch eher unwahrscheinlich.
 \item gibt die Kontrolle an die frisch reaktivierte eigene App zurück.
 \end{itemize}
 \begin{lstlisting}[caption=Kamera Beispiel]
- public partial class MainPage : PhoneApplicationPage
-{
-CameraCaptureTask camera = new CameraCaptureTask();
-// Constructor
-public MainPage()
-{
-InitializeComponent();
-camera.Completed += AquirePicture;
-}
-void AquirePicture(object sender, PhotoResult args)
-{
-if (args.TaskResult == TaskResult.OK)
-{
-BitmapImage bmp = new BitmapImage();
-bmp.SetSource(args.ChosenPhoto);
-img.Source = bmp;
-}
-}
-private void ManipulationStarted(object sender, ManipulationStartedEventArgs e)
-{
-camera.Show();
-e.Complete();
-e.Handled = true;
-base.OnManipulationStarted(e);
-}
+public partial class MainPage : PhoneApplicationPage {
+	CameraCaptureTask camera = new CameraCaptureTask();
+	// Constructor
+	public MainPage() {
+		InitializeComponent();
+		camera.Completed += AquirePicture;
+	}
+	void AquirePicture(object sender, PhotoResult args) {
+		if (args.TaskResult == TaskResult.OK) {
+			BitmapImage bmp = new BitmapImage();
+			bmp.SetSource(args.ChosenPhoto);
+			img.Source = bmp;
+		}
+	}
+	private void ManipulationStarted(object sender, ManipulationStartedEventArgs e) {
+		camera.Show();
+		e.Complete();
+		e.Handled = true;
+		base.OnManipulationStarted(e);
+	}
 }
 \end{lstlisting}
 
@@ -716,6 +724,478 @@ Hintergrund Services an!
 \end{description}
 
 \chapter{Multitasking}
+Ein Argument gegen echtes Multitasking ist, dass der beschränkte Bildschirmplatz sowieso nur eine App aufs
+Mal verträgt. Wenn also das Umschalten zwischen den Apps komfortabel und schnell genug ist, müssen die
+Apps im Hintergrund nicht unbedingt weiterlaufen. Sie würden meistens nichts tun als auf User-Input warten
+oder unnötig Rechenleistung verbrauchen um Dinge darzustellen die nicht sichtbar sind.
+Ist eine App gut auf das Tombstoning vorbereitet, kann sie bei einer Wiederauferstehung genau dort fortfahren,
+wo sie unterbrochen wurde, bzw. wo sie stünde wenn sie weitergelaufen wäre. Die Benutzerin würde also nicht
+unterscheiden können ob die App im Hintergrund weiter lief oder stehen blieb.
+Doch es gibt einige Ausnahmen. Die wichtigste Ausnahme vom Multitaskingverbot betrifft den Kernel des
+mobilen Betriebssystems (OS) selber. Das OS könnte ohne echtes Multitasking (d.h. mehrere gleichzeitige
+Prozesse mit getrenntem Adressraum) kaum seine Funktionalität anbieten. Komplette Trennung von Apps oder
+auch nur die ständige Empfangsbereitschaft für eingehende Telefonanrufe oder SMS wären nicht realisierbar.
+Für „normale“ Apps stehen ein paar Tricks zur Verfügung um ein echtes Multitasking vorzutäuschen oder
+teilweise gar zuzulassen.
+\begin{description}
+\item[Fast Application Switching]Statt eine App bei einer Unterbrechung wirklich zu beenden und wieder neu zu starten, wird sie einfach
+angehalten bleibt aber im Hauptspeicher erhalten. Beim Fortfahren entfällt somit eine teure Initialisierung
+\item[Scheduled Tasks] Tasks können in zwei Varianten im Hintergrund laufen: entweder in regelmässigen Abständen ganz kurz,
+oder dann wenn das Phone durch den Task nicht belastet wird.
+\item[Scheduled Notifications] Erlaubt das Anzeigen von Erinnerungen zu bestimmten Zeitpunkten
+\item[Background Audio] Ermöglicht einer App Musik abzuspielen auch nachdem sie geschlossen wurde.
+\item[Background Filetransfer] Ein längerer Filetransfer (z.B. Download) wird fortgesetzt, auch wenn die startende App beendet wird.
+\end{description}
+
+\section{Fast Application Switiching}
+Tombstoning ist ein schwerfälliger Mechanismus, da die Applikation nicht nur angehalten wird. Vielmehr wird
+der Speicher den die Applikation belegte freigegeben. Dies bedeutet, dass bei einer Wiederauferstehung die
+Applikation wieder geladen werden muss. Fast Application Switching (FAS) beschleunigt diesen Vorgang, indem
+die Applikation nur angehalten, deren Speicher aber behalten wird. Bei einer Wiederaufnahme müssen lediglichdie Event-Handler (Activated und 
+OnNavigatedTo) durchlaufen werden. Im besten Falle haben diese überhaupt
+nichts zu tun. Mit der Einführung von FAS wurde auch das Application Lifecycle Modell angepasst:
+\pic{modl.png}
+Trotz FAS ist es nötig ein Tombstoning vorzubereiten. Dies deshalb, weil bei fehlendem Speicher die
+„schlafenden“ Applikationen (im Zustand Dormant) aus dem Speicher geworfen werden. Falls kein Tombstoning
+vorgesehen war, fehlt eine sinnvolle Implementation der Activated-Methode und damit kehrt die Applikation
+unter Umständen nicht in den erwarteten Zustand zurück.
+
+\section{Scheduled Tasks}
+Es gibt zwei Arten von Tasks die im Hintergrund ausgeführt werden können:
+\begin{enumerate}
+\item  PeriodicTask
+Aufgaben die periodisch wiederkehrend erledigt werden sollen und wenig Rechenleistung benötigen.
+\item ResourceIntensiveTask
+Aufgaben die keine fixe Periodizität benötigen dafür aber viel Rechenleistung beanspruchen.
+Tasks werden durch sogenannte Agents ausgeführt (siehe auch die Klasse ScheduledTaskAgent)
+\end{enumerate}
+Tasks werden durch sogenannte Agents ausgeführt (siehe auch die Klasse ScheduledTaskAgent)
+
+\subsection{Background Agents}
+Eine Applikation kann nur einen Background Agent haben. Dieser wird entweder als PeriodicTask, Als
+ResourceIntensiveTask oder als beides gleichzeitig registriert. Wann der Agent ausgeführt wird, hängt von der
+Art des Agents ab. Der Agent-Code muss in einer Unterklasse von BackgroundAgent implementiert werden.
+Wenn der Agent gestartet wird, wird seine OnInvoke(ScheduledTask)-Methode aufgerufen. Der Agent kann
+aufgrund des Parameters ScheduledTask entscheiden, als welcher Task-Typ er gestartet wurde. Wenn der Agent
+seine Arbeit erledigt hat, muss er dies dem Betriebssystem melden. Er kann dies mittels einer von zwei
+Methoden tun:
+\begin{description}
+ \item [NotifyComplete] meldet dem Betriebssystem, dass der Task erfolgreich seine Arbeit erledigen konnte.
+ \item [Abort] meldet dem Betriebssystem, dass der Task seine Arbeit nicht erledigen konnte (z.B. weil eine
+Netzwerkverbindung nicht aufgebaut werden konnte). Zugleich wird das IsScheduled Property des Tasks
+auf false gesetzt. Dies bedeutet, dass dieser Task nicht mehr für weitere Ausführungen vorgesehen
+wird. Zudem kann die Applikation, wenn sie das nächste Mal läuft, dieses Property abfragen um
+herauszufinden ob ein Problem aufgetaucht ist.
+
+\end{description}
+
+\subsection{Task Einshränkungen}
+\textbf{Typ Unabhängig}
+\begin{itemize}
+ \item Nicht unterstützte APIs
+ \item Hauptspeicherlimit : 6MB
+ \item Erneuerung alle 2 Wochen : Das Scheduling eines Tasks läuft nach spätestens zwei Wochen ab.
+Danach muss er neu gescheduled werden. Dies kann natürlich bei jedem Start der Applikation erfolgen.
+\item Exception Limit : Herrausgeschmissen nach 2 aufeinanderfolgenden Exceptions
+\end{itemize}
+\textbf{Periodische Tasks}
+\begin{itemize}
+ \item Intervall für Ausführung : 30 min 
+ \item Arbeitszeit der Agent : 25 Sekunden
+ \item Keine Tasks in Batteriesparmodus (Optional)
+ \item Limitierte Anzahl Agents : Herrstellerspezifisch : Min \# 6
+\end{itemize}
+\textbf{Resource Intensive Einshränkungen}
+\begin{itemize}
+ \item Dauer der Aerbeit : 10 min. 
+ \item Ladegerät notwendig
+ \item WAN /  USB Internet notwendig
+ \item Min Batteriezustand : 90\% voll
+ \item Task lauft nur bei Screen Lock
+ \item Kein Telefongespräch am laufen.
+\end{itemize}
+Kann sein dass solche Resource Tasks nie ausgeführt werden - Nie darauf verlassen.
+
+\section{Scheduled Notifications}
+Benachrichtigungen können von einer Applikation im Betriebssystem registriert werden. Sie erscheinen dann
+zum vorgegebenen Zeitpunkt (auch periodisch falls gewünscht), ohne dass die Applikation am Laufen ist. Es gibt
+zwei Arten von Benachrichtigungen: Alarms und Reminders. Die Anzeigen sind unten abgebildet.
+\pic{sn.png}
+
+\section{Background Audio}
+Wie im Hintergrund Audiofiles abgespielt werden können, auch nachdem die startende Applikation geschlossen
+wurde wird in einem How to detailliert erklärt. Deshalb erfolgt hier keine Vertiefung dieses Themas.
+\section{Background File Transfer}
+Grössere Filetransfers (Up- oder Downloads) sollten möglichst asynchron erfolgen. Um den Transfer auch
+fortzusetzen wenn die auslösende Applikation verlassen wurde, sind Background File Transfers geeignet. Um
+einen Filetransfer im Hintergrund durchzuführen muss ein Request-Objekt vom Typemoba
+Multitasking
+BackgroundTransferRequest erstellt und mit den nötigen Informationen abgefüllt werden. Es sind dies
+Quelle und Ziel des Transfers, die Methode (HTTP oder HTTPS) sowie weitere Details der Verbindung. Quelle
+und Ziel werden als URI und Verzeichnis/File im Isolated Storage angegeben, je nachdem ob es sich beim
+Transfer um einen Upload oder Download handelt.
+Ist der BackgroundTransferRequest fertig „ausgefüllt“ wird er dem BackgroundTransfer-
+Service übergeben. Dies ist im Prinzip eine Queue, die die Requests entgegennimmt. Beide Klassen sind im
+Namespace Microsoft.Phone.BackgroundTransfer zu finden.
+\subsection{Limitierungen}
+\begin{itemize}
+\item Eine einzige Queue für alle Transfers, daher kann es vorkommen, dass ein Transfer nicht sofort beginnt
+\item Maximal 5 Transfers pro Applikation in der Queue
+\item Maximaler Upload von 5 MB
+\item Maximaler Download von 20 MB über GSM, 100 MB über WiFi auf Batterie
+\item Maximal 2 gleichzeitige Transfers pro Gerät
+\item Maximal 500 Transfers in der Queue (über alle Applikationen) 
+\end{itemize}
+Interessant ist, dass ein Transfer abgebrochen und später nochmals versucht wird, falls minimale
+Übertragungsraten unterschritten werden (50 Kbps bei 3G bzw. 100 Kbps bei Wifi/USB).
+Für den Background File Transfer gibt es noch Bedingungen an die Applikation die beim Review für den
+Marketplace überprüft werden:
+\begin{itemize}
+\item File Transfers müssen über ein sichtbares UI Element vom Benutzer ausgelöst werden.
+\item Der Benutzer muss die Möglichkeit haben sich den aktuellen Zustand laufender Transfers anzeigen zu
+lassen.
+\item Es muss dem Benutzer eine Möglichkeit geboten werden über ein UI Element Transfers abbrechen zu
+können.
+\end{itemize}
+
+\section{Fazit}
+Oberste prio sind Batterielaufzeit sowohl als Rechenleistung. Alles andere wird diesen Kriterien untergeordnet. 
+Eine Applikation sollte immer auch ohne die Multitasking-Eigenschaften sinnvoll funktionieren können.
+Die Illusion von Multitasking ist für den Benutzer gerade so gut wie echtes Multitasking!
+\part{Code}
+\chapter{Binding + Property Changed}
+\begin{lstlisting}[caption=Viewmodel + Umgang mit Property Changed]
+namespace Flashcards05.ViewModels
+{
+    public class DownloadViewModel : INotifyPropertyChanged
+    {
+		   public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(String propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (null != handler)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        
+           public bool IsDownloadInProgress
+        {
+            get
+            {
+                return _isDownloadInProgress;
+            }
+
+            private set
+            {
+                if (value != _isDownloadInProgress)
+                {
+                    _isDownloadInProgress = value;
+                    ProgressVisibility = _isDownloadInProgress ? Visibility.Visible : Visibility.Collapsed;
+                    NotifyPropertyChanged("IsDownloadInProgress");
+                    NotifyPropertyChanged("ProgressVisibility");
+                }
+            }
+        }    
+    }
+
+    
+    }
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Binding, language=xml]
+<ProgressBar x:Name="progress" 
+                         IsIndeterminate="{Binding IsDownloadInProgress}" 
+                         Visibility="{Binding ProgressVisibility}"
+                         Grid.Row="0"
+                         Style="{StaticResource CustomIndeterminateProgressBar}"/>
+\end{lstlisting}
+
+\section{Binding mit Converters (vom Internet - nicht abgedeckt von Denzler)}
+\begin{lstlisting}
+using System;
+using System.Windows.Data;
+ 
+namespace App.Converters
+{
+    public class BooleanToVisibilityConverter : IValueConverter
+    {
+        readonly Random _generator = new Random();
+ 
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            bool actualValue = (bool) value;
+            if (actualValue) return Visibility.Visible;
+            return Visibility.Collapsed;
+        }
+ 
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return null;
+        }
+    }
+}
+\end{lstlisting}
+
+\textbf{Folgendes bei Namespace Deklarationen im View hinzufügen} 
+\begin{verbatim}
+xmlns:converters="clr-namespace:App.Converters"
+\end{verbatim}
+
+\textbf{Folgendes Nach der Namespace Deklaration im View}
+\begin{lstlisting}[language=xml]
+<phone:PhoneApplicationPage.Resources>
+  <converters:BooleanToVisibilityConverter x:Name="MyConverter">
+</phone:PhoneApplicationPage.Resources>
+\end{lstlisting}
+\begin{lstlisting}
+ <TextBlock x:Name="MyInvisibleTextBlock" Visibility="{Binding MyBooleanProperty, Converter={StaticResource MyConverter}"}
+\end{lstlisting}
+
+\chapter{Layout }
+\section{Grid Beispiel}
+\begin{lstlisting}[language=xml]
+ <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+           <Grid.RowDefinitions>
+               <RowDefinition Height="Auto"/>
+               <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Image x:Name="MyImage" Grid.Row="0" Height="200" Source="{Binding Image}" />
+            <TextBlock Grid.Row="1" x:Name="question" Text="{Binding Question}" Style="{StaticResource labelStyle}" VerticalAlignment="Top" Margin="6,6,0,0" HorizontalAlignment="Left" Width="444" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="2" HorizontalAlignment="Left" x:Name="answer" Text="{Binding Answer}" Style="{StaticResource labelStyle}" VerticalAlignment="Top" Width="444" Margin="6,106,0,0" TextWrapping="Wrap" />
+        </Grid>
+
+\end{lstlisting}
+\chapter{Isolated Storage}
+\begin{lstlisting}[caption=Saveable object Example]
+namespace Flashcards05.Models
+{
+//Contract for Saveable Class
+    [DataContract] 
+    public class Card
+    {
+
+        public Card(string question, string answer, string imgpath)
+        {
+            Question = question;
+            Answer = answer;
+            ImagePath = imgpath;
+          
+        }
+//Annotation for saveable property, must be public.
+        [DataMember] 
+        public string Question { get;  set; }
+        [DataMember] 
+        public string Answer { get;  set; }
+        [DataMember] 
+        public string ImagePath { get; set; }
+
+        public BitmapImage actualImage { get; set; }
+    }
+\end{lstlisting}
+\begin{lstlisting}[caption=Loading and Saving]
+namespace Flashcards05.PersistentData
+{
+    public class Storage : IStorage
+    {
+        public T Load<T>(string filename, string directoryname) where T : class
+        {
+            T retVal = null;
+            String _filepath = System.IO.Path.Combine(directoryname, filename);
+            IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+            if (storage.FileExists(_filepath))
+                using (var sourceStream =
+                    storage.OpenFile(_filepath, FileMode.Open))
+                {
+                    DataContractSerializer _mySerializer = new DataContractSerializer(typeof (T));
+                    retVal = (T) _mySerializer.ReadObject(sourceStream);
+                }
+            return retVal;
+        }
+
+        public bool Save<T>(string filename, string directoryname, T serializableObject) where T : class
+        {
+            IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+            storage.CreateDirectory(directoryname);
+
+            string _filepath = System.IO.Path.Combine(directoryname, filename);
+            try
+            {
+                using (IsolatedStorageFileStream file = storage.CreateFile(_filepath))
+                {
+                    DataContractSerializer _mySerializer = new DataContractSerializer(typeof (T));
+                    _mySerializer.WriteObject(file, serializableObject);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Save object " + e.Message);
+                storage.DeleteFile(_filepath);
+                return false;
+            }
+            finally
+            {
+            }
+            return true;
+        }
+
+        public void SaveImage(StreamResourceInfo info, string basepath, Card card)
+        {
+            using (var ms = new MemoryStream())
+            {
+                StreamResourceInfo imgFile = App.GetResourceStream(info,
+                    new Uri(card.ImagePath, UriKind.Relative));
+                var bm = new BitmapImage();
+              
+                bm.SetSource(imgFile.Stream);
+                var wbm = new WriteableBitmap(bm);
+                wbm.SaveJpeg(ms,wbm.PixelWidth,wbm.PixelHeight,0,100);
+                Save(card.ImagePath, basepath + App.ImageFolder, ms.ToArray());
+            }
 
 
+        }
+
+        public BitmapImage LoadImage(string filename, string directoryname)
+        {
+            BitmapImage retVal = null;
+            var bytearray = Load<byte[]>(filename, directoryname);
+            using (var ms = new MemoryStream(bytearray, 0, bytearray.Length))
+            {
+               retVal = new BitmapImage();
+                retVal.SetSource(ms);
+            }
+            return retVal;
+
+        }
+    }
+}
+
+\end{lstlisting}
+\chapter{App Lifecycle}
+\begin{lstlisting}
+public App()
+        {
+            // Global handler for uncaught exceptions. 
+            UnhandledException += Application_UnhandledException;
+
+            // Standard Silverlight initialization
+            InitializeComponent();
+
+            // Phone-specific initialization
+            InitializePhoneApplication();
+
+            // Show graphics profiling information while debugging.
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                // Display the current frame rate counters.
+                Application.Current.Host.Settings.EnableFrameRateCounter = true;
+
+                // Show the areas of the app that are being redrawn in each frame.
+                //Application.Current.Host.Settings.EnableRedrawRegions = true;
+
+                // Enable non-production analysis visualization mode, 
+                // which shows areas of a page that are handed off GPU with a colored overlay.
+                //Application.Current.Host.Settings.EnableCacheVisualization = true;
+
+                // Disable the application idle detection by setting the UserIdleDetectionMode property of the
+                // application's PhoneApplicationService object to Disabled.
+                // Caution:- Use this under debug mode only. Application that disables user idle detection will continue to run
+                // and consume battery power when the user is not using the phone.
+                PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
+            }
+
+        }
+
+        // Code to execute when the application is launching (eg, from Start)
+        // This code will not execute when the application is reactivated
+        private void Application_Launching(object sender, LaunchingEventArgs e)
+        {
+         //   IsolatedStorageFile.GetUserStoreForApplication().Remove();
+        }
+
+        // Code to execute when the application is activated (brought to foreground)
+        // This code will not execute when the application is first launched
+        private void Application_Activated(object sender, ActivatedEventArgs e)
+        {
+            // Ensure that application state is restored appropriately
+            if (!App.ViewModel.IsDataLoaded)
+            {
+                
+                App.ViewModel.LoadData();
+            }
+        }
+
+        // Code to execute when the application is deactivated (sent to background)
+        // This code will not execute when the application is closing
+        private void Application_Deactivated(object sender, DeactivatedEventArgs e)
+        {
+            // Ensure that required application state is persisted here.
+        }
+
+        // Code to execute when the application is closing (eg, user hit Back)
+        // This code will not execute when the application is deactivated
+        private void Application_Closing(object sender, ClosingEventArgs e)
+        {
+        }
+
+        // Code to execute if a navigation fails
+        private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                // A navigation has failed; break into the debugger
+                System.Diagnostics.Debugger.Break();
+            }
+        }
+
+        // Code to execute on Unhandled Exceptions
+        private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
+        {
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                // An unhandled exception has occurred; break into the debugger
+                System.Diagnostics.Debugger.Break();
+            }
+        }
+
+        #region Phone application initialization
+
+        // Avoid double-initialization
+        private bool phoneApplicationInitialized = false;
+
+        // Do not add any additional code to this method
+        private void InitializePhoneApplication()
+        {
+            if (phoneApplicationInitialized)
+                return;
+
+            // Create the frame but don't set it as RootVisual yet; this allows the splash
+            // screen to remain active until the application is ready to render.
+            RootFrame = new PhoneApplicationFrame();
+            RootFrame.Navigated += CompleteInitializePhoneApplication;
+
+            // Handle navigation failures
+            RootFrame.NavigationFailed += RootFrame_NavigationFailed;
+
+            // Ensure we don't initialize again
+            phoneApplicationInitialized = true;
+        }
+
+        // Do not add any additional code to this method
+        private void CompleteInitializePhoneApplication(object sender, NavigationEventArgs e)
+        {
+            // Set the root visual to allow the application to render
+            if (RootVisual != RootFrame)
+                RootVisual = RootFrame;
+
+            // Remove this handler since it is no longer needed
+            RootFrame.Navigated -= CompleteInitializePhoneApplication;
+        }
+
+        #endregion
+    }
+}
+\end{lstlisting}
 \end{document}
