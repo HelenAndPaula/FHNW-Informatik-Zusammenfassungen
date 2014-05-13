@@ -51,6 +51,7 @@ Weiter gute Repos mit Implementationen von Übungen sind folgende:
 
 ### prcpp
 - [Daniel Gürber](https://github.com/danielguerber/PRCPP)
+- [Jonas Schwammberger](https://github.com/Helldevastator/PRCPP)
 
 ### eaf
 - [Roland Hediger](https://github.com/rolandhediger/eaf_solutions)
@@ -59,4 +60,4 @@ Weiter gute Repos mit Implementationen von Übungen sind folgende:
 - [Roland Hediger](https://github.com/rolandhediger/webfr_solutions)
 
 ### brerl
-- [abio Oesch](https://github.com/fabio-oesch/fhnw.bver)
+- [Fabio Oesch](https://github.com/fabio-oesch/fhnw.bver)
