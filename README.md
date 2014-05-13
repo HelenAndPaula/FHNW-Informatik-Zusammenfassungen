@@ -2,13 +2,13 @@
 Hier sind alle möglichen Zusammenfassungen aus dem Informatik Bachelor Studium an der FHNW Brugg/Windisch
 
 ## Fehler? Unvollständig?
-Sollte etwas fehlen oder ist jehmand unerwähnt oder möchte anonym bleiben einfach melden oder selbst ändern. :-)
+Sollte etwas fehlen oder ist jemand unerwähnt oder möchte anonym bleiben einfach melden oder selbst ändern. :-)
 
 ## Alte Prüfungen 
 Alte Prüfungen findet man [hier](http://www.ib08.ch) und [hier](http://www.infboard.ch).
 
 ## Weitere Repos
-Weiter gute Repos mit Implementationen von Übrungen sind folgende:
+Weiter gute Repos mit Implementationen von Übungen sind folgende:
 
 ### Diverse Fächer
 - [platzhersh](https://github.com/platzhersh/FHNW-Java-Projekte)
