@@ -766,6 +766,20 @@ Folgendes sollte im standalone.xml im subsystem logging drin stehen:
 % chapter wildfly (end)
 \chapter{Caching Puzzle} % (fold)
 \label{cha:caching_puzzle}
+\begin{description}
+	\item[Cache grösse] Was sind die Vorraussetzung für das löschen aus einem Cache mit limitierte grösse. (Wobei die alle limitierte Grösse haben)
+	Das problem wird gelöst mit periodischen Testen für die notwendigen bedingungen oder ein Predikat für wenn man testen soll - bzw nur bei 50\% Voll.\\
+	Dies setzt doch vorraus das man die Grösse von Objekten wissen kann in Bytes oder dass wir Annahmen darüber zuverlässig machen können. Ist aber in der Praxis nicht war und kann nur mittels JVM commandline Optionen für Heapsize geregelt werden - Cache in seperater JVM laufen lassen.\\
+	\textbf{Eviction:} Auch replacement Strategie : Wie soll ich entscheiden welche  Elemente aus dem Cache gelöscht werden sollen.
+	\textbf{Expiration:} Wann Objekte zu "alt" sind - wann sind die zu lange in dem Cache - Most Recently Used, Least Frequently Used usw.
+	\item [Schnittstelle und Implementation] \textbf{Cache hit/Miss:} Wann in der Cache etwas gefunden wird bzw bei Miss wenn ich oder der Framework von der Originalquelle hohlen muss. \\
+	\textbf{Expliziter/Impliziter Cache} : Explizit Cache - Ich bekomme null oder ein Exception zurück bei Cache miss und sollte selber um das hohlen aus der Originalquelle kummern. Implizit - Das bedeutet mehr oder weniger das wir ein Persistence Framework implementieren wie JPA sodass der Programmierer nicht bemerkt ob Caching benutzt wird oder nicht, er  bekommt das Resultät so oder so und es wird hinter der Kulisse behandelt.
+	\item[Memory Leaks] Referenzen im Hash sind problematisch weil der Garbage Collector nicht da drin rekursiv durchgeht - Strong References. Man sollte die etwas abschwächern (wrap mit Weakreference) damit wenn die nicht mehr im Hash referenciert sind die aufgeräumt werden können. \\
+	\textbf{Key Value Probleme:} Equals methode muss überschrieben werden - d.h wenn die Keys gleich sind sind die entsprechende Objekte dann gleich.\\
+	(Angaben hier ohne gewähr)
+	\item[Performance] Keys sollten in der Hash eigentlich immutable sein damit die obere gGeichheitsprüfung OK wäre. Einsetzung  von IdentityCache? Multithreading - mann sollte auf Konsistenz der Cache achten und entsprechendes Locking einsetzen. (Update im Original - Update im Cache)
+	(Angaben hier ohne gewähr)\\
+\end{description}
 
 % chapter caching_puzzle (end)
 \chapter{Load Balancing + Clustering} % (fold)
@@ -988,21 +1002,5 @@ Zusätzlicher Overhead für das Verteilen der Daten.
 \end{enumerate}
 % section sonnstiges (end)
 % chapter pr_fungsfragen_theorie (end)
-\section{Caching Puzzle Notitzen} % (fold)
-\label{sec:caching_puzzle_notitzen}
-\begin{description}
-	\item[Cache grösse] Was sind die Vorraussetzung für das löschen aus einem Cache mit limitierte grösse. (Wobei die alle limitierte Grösse haben)
-	Das problem wird gelöst mit periodischen Testen für die notwendigen bedingungen oder ein Predikat für wenn man testen soll - bzw nur bei 50\% Voll.\\
-	Dies setzt doch vorraus das man die Grösse von Objekten wissen kann in Bytes oder dass wir Annahmen darüber zuverlässig machen können. Ist aber in der Praxis nicht war und kann nur mittels JVM commandline Optionen für Heapsize geregelt werden - Cache in seperater JVM laufen lassen.\\
-	\textbf{Eviction:} Auch replacement Strategie : Wie soll ich entscheiden welche  Elemente aus dem Cache gelöscht werden sollen.
-	\textbf{Expiration:} Wann Objekte zu "alt" sind - wann sind die zu lange in dem Cache - Most Recently Used, Least Frequently Used usw.
-	\item [Schnittstelle und Implementation] \textbf{Cache hit/Miss:} Wann in der Cache etwas gefunden wird bzw bei Miss wenn ich oder der Framework von der Originalquelle hohlen muss. \\
-	\textbf{Expliziter/Impliziter Cache} : Explizit Cache - Ich bekomme null oder ein Exception zurück bei Cache miss und sollte selber um das hohlen aus der Originalquelle kummern. Implizit - Das bedeutet mehr oder weniger das wir ein Persistence Framework implementieren wie JPA sodass der Programmierer nicht bemerkt ob Caching benutzt wird oder nicht, er  bekommt das Resultät so oder so und es wird hinter der Kulisse behandelt.
-	\item[Memory Leaks] Referenzen im Hash sind problematisch weil der Garbage Collector nicht da drin rekursiv durchgeht - Strong References. Man sollte die etwas abschwächern (wrap mit Weakreference) damit wenn die nicht mehr im Hash referenciert sind die aufgeräumt werden können. \\
-	\textbf{Key Value Probleme:} Equals methode muss überschrieben werden - d.h wenn die Keys gleich sind sind die entsprechende Objekte dann gleich.\\
-	(Angaben hier ohne gewähr)
-	\item[Performance] Keys sollten in der Hash eigentlich immutable sein damit die obere gGeichheitsprüfung OK wäre. Einsetzung  von IdentityCache? Multithreading - mann sollte auf Konsistenz der Cache achten und entsprechendes Locking einsetzen. (Update im Original - Update im Cache)
-	(Angaben hier ohne gewähr)\\
-\end{description}
 % section caching_puzzle_notitzen (end)
 \end{document}
