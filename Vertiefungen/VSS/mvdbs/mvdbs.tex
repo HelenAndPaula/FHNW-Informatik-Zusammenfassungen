@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt,titlepage=false,twocolumn,landscape]{scrreprt}
+\documentclass[a4paper,10pt,titlepage=false]{scrreprt}
 \usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
@@ -27,41 +27,60 @@
 \usepackage{listings}
 \usepackage{caption}
 \usepackage[T1]{fontenc}
-\DeclareCaptionFont{white}{\color{white}}
-\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
-\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
-\lstset{
- language=Java,
- basicstyle=\footnotesize\ttfamily, % Standardschrift
- numbers=left,               % Ort der Zeilennummern
- numberstyle=\tiny,          % Stil der Zeilennummern
- stepnumber=5,              % Abstand zwischen den Zeilennummern
- numbersep=5pt,              % Abstand der Nummern zum Text
- tabsize=2,                  % Groesse von Tabs
- extendedchars=true,         %
- breaklines=true,            % Zeilen werden Umgebrochen
- frame=b,         
- %commentstyle=\itshape\color{LightLime}, Was isch das? O_o
- %keywordstyle=\bfseries\color{DarkPurple}, und das O_o
- basicstyle=\footnotesize\ttfamily,
- stringstyle=\color[RGB]{42,0,255}\ttfamily, % Farbe der String
- keywordstyle=\color[RGB]{127,0,85}\ttfamily, % Farbe der Keywords
- commentstyle=\color[RGB]{63,127,95}\ttfamily, % Farbe des Kommentars
- showspaces=false,           % Leerzeichen anzeigen ?
- showtabs=false,             % Tabs anzeigen ?
- xleftmargin=17pt,
- framexleftmargin=17pt,
- framexrightmargin=5pt,
- framexbottommargin=4pt,
- showstringspaces=false      % Leerzeichen in Strings anzeigen ?        
+\DeclareCaptionFont{white}{\color{black}}
+\DeclareCaptionFormat{listing}{\colorbox{white}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white,font=bf}
+\lstdefinestyle{sqlNoTitle}{
+   language=SQL,
+   basicstyle=\footnotesize\ttfamily, % Standardschrift
+   backgroundcolor=\color[RGB]{230,230,230}, % Hintergrundfarbe
+   numbers=left,               % Ort der Zeilennummern
+   numberstyle=\tiny,          % Stil der Zeilennummern
+   stepnumber=1,               % Abstand zwischen den Zeilennummern
+   numbersep=5pt,              % Abstand der Nummern zum Text
+   tabsize=2,                  % Groesse von Tabs
+   extendedchars=true,         % Erlaubt non-ascii Charakter, aber nicht mit UTF8
+   literate={ä}{{\"a}}1 {ü}{{\"u}}1 {ö}{{\"o}}1,
+   breaklines=true,            % Zeilen werden Umgebrochen
+   frame=trbl,                 % Rahmen
+   stringstyle=\color[RGB]{42,0,255} \ttfamily, % Farbe der String
+   keywordstyle=\color[RGB]{127,0,85} \ttfamily, % Farbe der Keywords
+   commentstyle=\color[RGB]{63,127,95} \ttfamily, % Farbe des Kommentars
+   showspaces=false,           % Leerzeichen anzeigen ?
+   showtabs=false,             % Tabs anzeigen ?
+   xleftmargin=17pt,
+   framexleftmargin=17pt,
+   framexrightmargin=5pt,
+   framexbottommargin=5pt,
+   framextopmargin=5pt,
+   showstringspaces=false,     % Leerzeichen in Strings anzeigen ?
 }
 
+
+\lstdefinestyle{sql}{
+   style=sqlNoTitle,
+   title=SQL-Skript
+}
+
+\lstdefinestyle{queryResult}{
+  basicstyle=\footnotesize\ttfamily, % Standardschrift
+  backgroundcolor=\color[RGB]{240,255,240}, % Hintergrundfarbe
+  frame=trbl,                 % Rahmen
+  literate={ä}{{\"a}}1 {ü}{{\"u}}1 {ö}{{\"o}}1,
+}
+
+\lstdefinestyle{queryResultSmall}{
+  style=queryResult,
+  basicstyle=\scriptsize\ttfamily, % Standardschrift
+}
 \setuptoc{toc}{leveldown}
 
 \begin{document}
  \maketitle
  \tableofcontents
 \pagestyle{fancy}
+\part{Theorie} % (fold)
+\label{prt:theorie_}
 \chapter{Einführung}
 \begin{description}
  \item [Was wird Verteilt] \hfill \\
@@ -1633,4 +1652,209 @@ Folgende Optionen sind z.B. möglich: \\
 \item \textbf{Abspeicherung Lokal} \pic{extents.png}
 \end{enumerate}
 % section mongodb (end)
+
+\part{Labs} % (fold)
+\label{prt:labs_}
+\section{Lab 1 - Trigger}
+\subsection{Event Logging}
+\subsubsection{Aufgabenstellung}
+Manipulationen auf der Tabelle REGISTRIERUNGEN loggen. Trigger und Log-Tabelle befinden sich auf dem gleichen System wie REGISTRIERUNGEN.\\
+\subsubsection{Lösung}
+\begin{lstlisting}[style=sql, title=Log-Tabelle]
+-- Erste Möglichkeit
+CREATE TABLE registrierungen_log (
+  username VARCHAR2(15) NOT NULL,
+  systemdate DATE NOT NULL,
+  maniptype VARCHAR2(3) NOT NULL,
+  oldval VARCHAR(15), 
+  newval VARCHAR(15)
+);
+-- Zweite Möglichkeit
+CREATE TABLE registrierungen_log (
+  username VARCHAR2(15) NOT NULL,
+  systemdate DATE NOT NULL,
+  maniptype VARCHAR2(3) NOT NULL,
+  oldmnr VARCHAR2(4) NULL,
+  newmnr VARCHAR2(4) NULL,
+  oldfnr VARCHAR2(3) NULL,
+  newfnr VARCHAR2(3) NULL,
+  oldanr VARCHAR2(4) NULL,
+  newanr VARCHAR2(4) NULL,
+  olddatum DATE NULL,
+  newdatum DATE NULL
+);
+\end{lstlisting}
+\begin{lstlisting}[style=sql, title=Trigger]
+-- Erste Möglichkeit
+CREATE OR REPLACE TRIGGER registrierungen_change
+  BEFORE 
+    INSERT OR
+    UPDATE OR
+    DELETE
+  ON registrierungen
+  FOR EACH ROW
+  
+  DECLARE 
+    username VARCHAR(15);
+    maniptype VARCHAR2(3);
+    systemdatum DATE := SYSDATE;
+  BEGIN
+    SELECT USER INTO username FROM DUAL;
+    CASE
+      WHEN INSERTING THEN
+        maniptype := 'INS';
+        INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, NULL, :NEW.mnr);
+        INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, NULL, :NEW.fnr);
+        INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, NULL, :NEW.anr);
+        INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, NULL, TO_CHAR(:NEW.datum, 'DD.MM.YYYY'));
+      WHEN DELETING THEN
+        maniptype := 'DEL';
+        INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, :OLD.mnr, NULL);
+        INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, :OLD.fnr, NULL);
+        INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, :OLD.anr, NULL);
+        INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, TO_CHAR(:OLD.datum, 'DD.MM.YYYY'), NULL);
+      WHEN UPDATING THEN
+        maniptype := 'UPD';
+        CASE
+          WHEN :OLD.mnr != :NEW.mnr THEN
+            INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, :OLD.mnr, :NEW.mnr);
+          WHEN :OLD.fnr != :NEW.fnr THEN
+            INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, :OLD.fnr, :NEW.fnr);
+          WHEN :OLD.anr != :NEW.anr THEN
+            INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, :OLD.anr, :NEW.anr);
+          WHEN :OLD.datum != :NEW.datum THEN
+            INSERT INTO registrierungen_log(username, systemdate, maniptype, oldval, newval) VALUES(username, systemdatum, maniptype, TO_CHAR(:OLD.datum, 'DD.MM.YYYY'), TO_CHAR(:NEW.datum, 'DD.MM.YYYY'));
+        END CASE;
+    END CASE;
+  END;
+
+-- Zweite Möglichkeit
+CREATE OR REPLACE TRIGGER registrierungen_change
+  AFTER 
+    INSERT OR
+    UPDATE OR
+    DELETE
+  ON registrierungen
+  FOR EACH ROW
+  DECLARE
+    log_action VARCHAR2(3);
+  BEGIN
+    IF INSERTING THEN
+      log_action := 'INS';
+    ELSIF UPDATING THEN
+      log_action := 'UPD';
+    ELSIF DELETING THEN
+      log_action := 'DEL';
+    ELSE
+      DBMS_OUTPUT.PUT_LINE('This code is not reachable.');
+    END IF;
+    INSERT INTO registrierungen_log(username, systemdate, maniptype, oldmnr, newmnr, oldfnr, newfnr, oldanr, newanr, olddatum, newdatum) 
+    VALUES (USER, SYSDATE, log_action, :OLD.mnr, :NEW.mnr, :OLD.fnr, :NEW.fnr, :OLD.anr, :NEW.anr, :OLD.datum, :NEW.datum);
+  END
+;
+\end{lstlisting}
+\subsubsection{Lösungsbeschrieb}
+\begin{tabular}{| p{5cm} | p{5cm} | p{5cm} |}
+\hline
+Code & Zweck & Kommentar\\ \hline
+BEFORE, AFTER, INSTEAD OF & Das Timing des Triggers, wobei INSTEAD OF die auslösende Operation auf eine View mit Operationen des Triggers ersetzt.&\\ \hline
+FOR EACH ROW & Der Trigger soll für jede Reihe einzeln ausgelöst werden, statt für ein Statement. & Für diesen Trigger sehr wichtig, da Manipulationen auf der Granularität von Zeilen geloggt werden müssen. Dadurch hat man auch Zugriff auf alte und neue Werte.\\ \hline
+systemdatum DATE := SYSDATE;\newline
+SELECT USER INTO username FROM DUAL; & Zwei verschiedene Möglichkeiten Systemvariablen in einer Variable zu speichern. & FROM DUAL muss verwendet werden, da ein SELECT nicht ohne FROM verwendet werden darf. Dabei wird DUAL als eine DUMMY Tabelle verwendet und enthaltet keine Informationen.\\ \hline
+:NEW.mnr\newline
+:OLD.mnr & Falls die Granularität des Triggers auf Zeilenebene fest gelegt ist, kann durch :NEW und :OLD auf die Werte zugegriffen werden, die vor und nach der Manipulation in der Tabelle stehen würden.&\\ \hline
+INSERTING, DELETING, UPDATING & Können in einem WHEN-CASE verwendet werden, um abzufragen, bei welcher Operation der Trigger ausgelöst wurde. & Ist nur nötig, falls der Trigger bei mehr als eine Operation triggert.\\ \hline
+\end{tabular}
+\subsection{Referential Integrity}
+\subsubsection{Aufgabenstellung}
+In einer zentralisierten Datenbank (sämtliche Tabellen auf einem System) wird die referentielle Integrität vom Datenbanksystem überprüft. In einer verteilten Datenbank ist dies nicht mehr möglich, da die Datenbanksysteme voneinander getrennt sind. Die referentielle Integrität muss somit manuell über Trigger überprüft werden.\\
+Für die Aufgabe werden die Tabellen Filialen[PK:FNr] und DVDKopien[PK:DVDNr, FK1:FNr] behandelt.
+\subsubsection{Lösung}
+\begin{lstlisting}[style=sql, title=Link ananke <=> helios]
+CREATE DATABASE LINK orion.helios.fhnw.ch
+CONNECT TO mvdbs00 IDENTIFIED BY mvdbs00
+USING 'orion';
+
+-- Mit Views, filialen-Trigger auf ananke
+CREATE OR REPLACE VIEW filialen AS
+SELECT * FROM filialen@orion.helios.fhnw.ch;
+
+-- Ohne Views, filialen-Trigger auf helios
+CREATE SYNONYM filialen FOR filialen@orion.helios.fhnw.ch;
+
+CREATE SYNONYM dvdkopien FOR dvdkopien@ananke.hades.fhnw.ch;
+\end{lstlisting}
+\begin{lstlisting}[style=sql, title=FILIALEN-Trigger auf ananke]
+CREATE OR REPLACE TRIGGER dvdkopien_ref_check_ins_upd
+  BEFORE
+    INSERT OR
+    UPDATE
+  ON dvdkopien
+  FOR EACH ROW
+  DECLARE
+    msg VARCHAR2(100) := 'Integritäts-Constraint verletzt - übergeordneter Schlüssel nicht gefunden';
+    cnt NUMBER;
+  BEGIN
+    SELECT COUNT(*) INTO cnt FROM filialen WHERE filialen.fnr = :NEW.fnr;
+    IF (cnt = 0) THEN RAISE_APPLICATION_ERROR(-20000, msg); END IF;
+  END;
+\end{lstlisting}
+\begin{lstlisting}[style=sql, title=DVDKOPIEN-Trigger auf helios]
+CREATE OR REPLACE TRIGGER filialen_del_upd
+  BEFORE DELETE OR UPDATE ON filialen
+  FOR EACH ROW
+  DECLARE 
+    msg VARCHAR2(100) := 'Integritäts-Constraint verletzt - untergeordneter Datensatz gefunden';
+    cnt NUMBER;
+  BEGIN
+    SELECT COUNT(*) INTO cnt FROM dvdkopien WHERE dvdkopien.fnr = :OLD.fnr;
+    IF (cnt > 0) THEN RAISE_APPLICATION_ERROR(-20000, msg);
+    END IF;
+  END;
+\end{lstlisting}
+\subsubsection{Lösungsbeschrieb}
+\begin{tabular}{| p{5cm} | p{5cm} | p{5cm} |}
+\hline
+Voraussetzungen & Synonym von FILIALEN auf ananke & Auf dem ursprünglichen System muss eine  ein Synonym (inkl. Datenbanklink) zu FILIALEN auf helios bestehen, damit auf dessen Daten zugegriffen werden kann, um die Integrität zu überprüfen.\\ \hline
+Trigger-Lokalität & \multicolumn{2}{p{10cm}|}{Die Trigger sollten auf den Systemen installiert werden, auf denen sich ebenfalls die Tabellen befinden. Sämtliche Trigger können aber auch auf einem System installiert werden. Dann müssen die Trigger jedoch auf Views der entfernten Tabellen triggern und die Operation durch INSTEAD OF ersetzen, damit zuerst die Integrität überprüft und danach die ursprüngliche Operation ausgeführt werden kann.}\\ \hline
+RAISE\_APPLICATION\_ERROR(-20000, msg); & Hier wird eine Fehlermeldung erzeugt. & Der Code ist dabei entscheidend, was angezeigt wird. -20000 ist nicht obligatorisch für dieses Lab, ein Besseres konnte jedoch nicht auf die Schnelle gefunden werden.\\ \hline
+BEFORE & Logik des Triggers wird vor der Ausführung der Operation ausgeführt & In diesem Lab ist ein BEFORE-Trigger nötig, da durch das Werfen eines Fehlers die folgende Operationen abgebrochen wird.\\ \hline
+\end{tabular}
+\section{Lab 3 - Verteilter Datenbankentwurf}
+\subsection{Aufgabenstellung}
+Anhand von Anwendungen und deren Ausführungshäufigkeiten eine verteilte Datenbank entwerfen.\\
+\begin{lstlisting}[style=sql, title=Anwendungen]
+-- Anwendung q1
+SELECT name, typ, maxmiete
+FROM kunde;
+-- Anwendung q2
+SELECT telefonnummer, name, typ
+FROM kunde
+WHERE maxmiete <= 2000;
+-- Anwendung q3
+SELECT telefonnummer, maxmiete
+FROM kunde;
+-- Anwendung q4
+SELECT DISTINCT(typ)
+FROM kunde;
+-- Anwendung q5
+SELECT telefonnummer, name
+FROM kunde
+WHERE typ = 'Wohnung';
+\end{lstlisting}
+\textbf{Ausführungshäufigkeiten}\\
+\begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|}
+\hline
+Anwendung & System & Zugriffshäufigkeit\\ \hline
+q1 & ananke & 10\\ \hline
+q1 & telesto & 20\\ \hline
+q2 & ananke & 5\\ \hline
+q2 & calypso & 10\\ \hline
+q3 & telesto & 35\\ \hline
+q3 & calypso & 5\\ \hline
+q4 & telesto & 10\\ \hline
+q5 & telesto & 15\\ \hline
+\end{tabular}
+
+% part labs_ (end)
 \end{document}
