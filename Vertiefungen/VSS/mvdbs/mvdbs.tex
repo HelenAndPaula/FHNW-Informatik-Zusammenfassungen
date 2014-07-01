@@ -20,6 +20,13 @@
  \caption{#1}
 \end{figure}
 }
+\newcommand{\bigpic}[3][figure]{\begin{figure}[h]
+ \centering
+ \includegraphics[width=#3]{#2}
+ % rsc.png: 0x0 pixel, 0dpi, 0.00x0.00 cm, bb=
+ \caption{#1}
+\end{figure}
+}
 \usepackage{framed}
 % Code listenings
 \usepackage{color}
@@ -1855,6 +1862,42 @@ q3 & calypso & 5\\ \hline
 q4 & telesto & 10\\ \hline
 q5 & telesto & 15\\ \hline
 \end{tabular}
-
+\subsection{Lösung}
+\bigpic[Globale Affinität]{Labs/Lab3_VertikaleFragmentierung/lab3_global_aff.png}{17cm}
+\bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea.png}{18cm}
+\bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea2.png}{8cm}
+\bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea3.png}{7cm}
+\bigpic[Hilfsmatrizen]{Labs/Lab3_VertikaleFragmentierung/lab3_help.png}{17cm}
+\bigpic[Splitting und Fragmentierung]{Labs/Lab3_VertikaleFragmentierung/lab3_splitting_fragments.png}{18cm}
+\bigpic[Korrektheit]{Labs/Lab3_VertikaleFragmentierung/lab3_correctness.png}{18cm}
+\subsection{Lösungsbeschrieb}
+\subsubsection{Weg zur globalen Affinität}
+Als Grundlage für die Usage Matrix dienen die Anwendung/Queries. Bei jedem Attribut, auf die ein Query zugreift, wird das Flag[1=true,0=false] in der Matrix gesetzt. Beim Zusammentragen der Attribute muss man sich darauf achten, dass nicht nur der Select berücksichtigt wird, sondern auch andere Zugriffe, wie zum Beispiel im Where.\\
+Die Zugriffshäufigkeitsmatrix wird durch das Zusammentragen der Informationen aus der Ausführungshäufigkeit der einzelnen Queries auf den einzelnen Systemen gebildet. Es ist ratsam für weitere Anwendung gleich eine Summe zu bilden, wie viel mal auf ein Query zugegriffen wird.\\
+Die Attributs-Affinität Matrix bildet nun sämtliche Attribute ab. Diese Matrix kann wie folgt ausgefüllt werden:
+\begin{itemize}
+\item Parameter Zeile / Spalte => Name / Telefon
+\item In der Usage Matrix prüfen welche Queries auf diese Attribute zugreifen, also eine 1 in beiden \item Feldern stehen haben => q2, q5
+\item Zugriffshäufigkeit dieser Queries aufsummieren => 15 + 15 = 30
+\item In der AA-Matrix unter Zeile / Spalte und Spalte / Zeile eintragen
+\end{itemize}
+Da die AA-Matrix symmetrisch an der Diagonale aufgebaut ist, können meistens Zeile und Spalte vertauscht werden, um das gleiche Resultat in der Matrix einzutragen.\\
+\textbf{Achtung!} Der Bond Energy Algorithmus ist hier vereinfacht dargestellt, da mit Excel gearbeitet wurde. Beim korrekten Vorgehen muss der Beitrag einer Änderung berechnet werden. Dabei kann wie folgt überlegt werden:
+\begin{itemize}
+\item Die "'lokale Affinität"' zweier benachbarter Spalten kann berechnet werden indem Werte der benachbarten Spalten in einer Zeile multipliziert und anschliessend zeilenweise aufsummiert werden. Beispiel Name Telefon: 60*30 + 30*70 + 60*30 + 45*55 = 8175.
+\item Wird bei BEA nun eine Änderung durch das Hinzufügen einer weiteren Spalte bewirkt, wird der Beitrag wie folgt berechnet:
+\begin{itemize}
+\item bestehende Nachbarschaften werden nicht aufgelöst: "'lokale Affinität"' berechnen; das ist der Beitrag; dies ist der Fall, wenn der neue Nachbar links oder rechts der Matrix hinzugefügt wird
+\item bestehende Nachbarschaften werden aufgelöst: "'lokale Affinität"' der aufgelösten Nachbarn berechnen (z.B. Name-Telefon), dieser Wert wird vom Beitrag abgezogen; "'lokale Affinität"' des neuen Nachbarn jeweils mit der rechten und linken Spalte berechnen (z.B. Name-Typ, Typ-Telefon); diese Werte werden zum Beitrag addiert
+\end{itemize}
+\item Die Änderung mit dem grössten Beitrag wird durchgeführt und die nächste Iteration beginnt.
+\item Sind alle Iterationen durch, können die Zeilen entsprechend den Spalten angeordnet werden.
+\end{itemize}
+Es wurde die Matrix berechnet, die die grösste globale Affinität besitzt. Nun muss noch berechnet werden, wie die Fragmente dieser Tabelle gebildet werden sollen. Dazu wird entlang der Diagonalen der Matrix der Trennpunkt verschoben. Es muss nun die Fragmentierung mit der grössten Trennqualität gefunden werden. Der Algorithmus acc berechnet sich wie folgt:
+\begin{itemize}
+\item ein Parameter: falls in einer Zeile/Query in der Usage Matrix in irgend einer Spalte des Parameters/des Fragments eine 1 steht und in allen Spalten, die nicht zum Fragments gehören, eine 0, dann wird die Zugriffshäufigkeit des Queries zum Resultat addiert
+\item zwei Parameter: gleich wie bei einem Parameter, nur muss mindestens die Bedingung für Spalten des ersten UND des zweiten Fragments zutreffen
+\end{itemize}
+Für das Splitting wählt man ebenfalls die Variante mit dem höchsten Wert aus und drückt es anschliessend in algebraischer Form aus.
 % part labs_ (end)
 \end{document}

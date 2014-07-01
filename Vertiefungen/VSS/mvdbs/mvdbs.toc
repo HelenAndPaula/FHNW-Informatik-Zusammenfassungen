@@ -17,9 +17,9 @@
 \contentsline {section}{\numberline {2.1}Einff\IeC {\"u}hrung}{7}
 \contentsline {section}{\numberline {2.2}Entw\IeC {\"u}rfe}{7}
 \contentsline {subsection}{\numberline {2.2.1}Top Down}{7}
-\contentsline {subsubsection}{\nonumberline Grad der Fragmentierung}{8}
-\contentsline {subsubsection}{\nonumberline Horizontal}{8}
-\contentsline {subsubsection}{\nonumberline Projektion - Vertikal}{8}
+\contentsline {subsubsection}{Grad der Fragmentierung}{8}
+\contentsline {subsubsection}{Horizontal}{8}
+\contentsline {subsubsection}{Projektion - Vertikal}{8}
 \contentsline {subsection}{\numberline {2.2.2}Bottom Up}{8}
 \contentsline {section}{\numberline {2.3}Korrektheit der Fragmentierung}{9}
 \contentsline {section}{\numberline {2.4}Fragmentierungsabk\IeC {\"u}rzungen}{9}
@@ -92,12 +92,15 @@
 \contentsline {part}{\numberline {II}Labs}{46}
 \contentsline {section}{\numberline {8.6}Lab 1 - Trigger}{47}
 \contentsline {subsection}{\numberline {8.6.1}Event Logging}{47}
-\contentsline {subsubsection}{\nonumberline Aufgabenstellung}{47}
-\contentsline {subsubsection}{\nonumberline L\IeC {\"o}sung}{47}
-\contentsline {subsubsection}{\nonumberline L\IeC {\"o}sungsbeschrieb}{49}
+\contentsline {subsubsection}{Aufgabenstellung}{47}
+\contentsline {subsubsection}{L\IeC {\"o}sung}{47}
+\contentsline {subsubsection}{L\IeC {\"o}sungsbeschrieb}{49}
 \contentsline {subsection}{\numberline {8.6.2}Referential Integrity}{49}
-\contentsline {subsubsection}{\nonumberline Aufgabenstellung}{49}
-\contentsline {subsubsection}{\nonumberline L\IeC {\"o}sung}{49}
-\contentsline {subsubsection}{\nonumberline L\IeC {\"o}sungsbeschrieb}{50}
+\contentsline {subsubsection}{Aufgabenstellung}{49}
+\contentsline {subsubsection}{L\IeC {\"o}sung}{49}
+\contentsline {subsubsection}{L\IeC {\"o}sungsbeschrieb}{50}
 \contentsline {section}{\numberline {8.7}Lab 3 - Verteilter Datenbankentwurf}{50}
 \contentsline {subsection}{\numberline {8.7.1}Aufgabenstellung}{50}
+\contentsline {subsection}{\numberline {8.7.2}L\IeC {\"o}sung}{51}
+\contentsline {subsection}{\numberline {8.7.3}L\IeC {\"o}sungsbeschrieb}{51}
+\contentsline {subsubsection}{Weg zur globalen Affinit\IeC {\"a}t}{51}
