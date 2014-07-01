@@ -15,7 +15,7 @@
 \usepackage{amssymb}
 \newcommand{\pic}[2][figure]{\begin{figure}[h]
  \centering
- \includegraphics[scale=0.3]{#2}
+ \includegraphics[scale=0.5]{#2}
  % rsc.png: 0x0 pixel, 0dpi, 0.00x0.00 cm, bb=
  \caption{#1}
 \end{figure}
@@ -236,6 +236,142 @@ sein
 \item Daten Modell: Resource Description Framework (RDF)
 \end{itemize}
 $ 3^2 + 4x + 3x_{bla}$
+
+\chapter{Trigger} % (fold)
+\label{cha:trigger}
+\begin{description}
+  \item[Was sind Trigger?] \hfill \\
+  Prozeduren in der Datenbank hinterlegt. Ereignisse feuern die Trigger ,keine explizite Ausführung.
+  \item[Wozu dienen Trigger?] \hfill \\
+  \begin{itemize}
+    \item Realisieren aktive Datenbanksysteme
+\item Berechnung abgeleiteter Attribute
+\item Überprüfen komplexer Integritätsbedingungen
+\item Implementierung von Geschäftsregeln
+\item Protokollierung, Statistiken
+\item Überprüfen von Integritätsbedingungen in verteilten
+\item Datenbanken Synchronisation von Replikaten
+  \end{itemize}
+ \item[Trigger Konzept:] ECA Prinzip - Event, Condition Action
+\end{description}
+\section{Triggertypen} % (fold)
+\label{sec:triggertypen}
+\begin{description}
+  \item[TriggerTypen (erreignis)] DML-Trigger können auf Tabellen oder Views de niert
+werden.SQL-1999 beschreibt nur DML-Trigger auf Tabellen.\\
+
+\begin{itemize}
+  \item DML: UPDATE, DELETE, INSERT
+\item DDL: CREATE, ALTER, DROP, ...
+\item Datenbank: SERVERERROR, LOGON, LOGOFF, STARTUP,
+SHUTDOWN, ...
+
+\end{itemize}
+ \item[TriggerTypen (Timing)] 
+\begin{itemize}
+  \item BEFORE Trigger
+\item AFTER Trigger
+\item INSTEAD OF Trigger
+\end{itemize}
+ Der INSTEAD OF Trigger ist ein Spezialfall. Die
+Triggeraktion ersetzt den triggernden Befehl und wird nur
+bei Views eingesetzt.
+SQL-1999 beschreibt nur BEFORE und AFTER Trigger.
+\item[TriggerTypen (granularität)] \hfill \\
+\begin{itemize}
+  \item STATEMENT Trigger
+\item ROW Trigger
+\end{itemize}
+
+\end{description}
+% section triggertypen (end)
+\section{DML Trigger auf Tabellen} % (fold)
+\label{sec:dml_trigger_auf_tabellen}
+\begin{lstlisting}[caption=Syntax von DML Trigger,style=sql]
+  CREATE [OR REPLACE ] TRIGGER{ BEFORE|AFTER } events
+[WHEN ( c o n d i t i o n ) ]
+pl / sql_block
+\end{lstlisting}
+\begin{lstlisting}[caption=Events von DML Trigger,style=sql]
+  { DELETE|INSERT|UPDATE
+[OF column [ , column ] . . . ] }
+[OR { DELETE|INSERT|UPDATE
+[OF column [ , column ] . . . ] } ] . . .
+ON t a b l e [FOR EACH ROW]
+
+\end{lstlisting}
+\pic{plsql.png}
+
+\section{PLSQL allgemein} % (fold)
+\label{sec:plsql}
+\pic{plag.png}
+\pic{plag2.png}
+
+\begin{description}
+  \item[Datentypen:] \hfill \\
+  \begin{itemize}
+     \item SQL Datentypen wie
+VARCHAR2, DATE, NUMBER
+\item reine PL/SQL Datentypen wie
+BOOLEAN, PLS\_INTEGER
+\item strukturierte Datentypen wie
+TABLE, VARRAY, RECORD
+\item Datentypen für Spalten und Zeilen aus Tabellen
+\%ROWTYPE, \%TYPE
+
+   \end{itemize}
+   \item[Anweisungen] \pic{anwpl.png}
+   \pic{anwpl2.png}
+   \pic{anwpl3.png}
+
+\end{description}
+% section plsql (end)
+
+\section{Trigger Beispiele} % (fold)
+\label{sec:trigger_beispiele}
+\begin{lstlisting}[caption=Statement Level Trigger,style=sql]
+  CREATE OR REPLACE TRIGGERBEFORE UPDATE ON f i l m e
+f i l m e _ s t a t _ u p d
+DECLARE
+msg VARCHAR2 ( 3 0 ) : = ' f i l m e _ s t a t _ u p d ' ;
+BEGIN
+dbms_output . p u t _ l i n e ( msg ) ;
+END;
+
+\end{lstlisting}
+\begin{lstlisting}[caption=Triggering Statement,style=sql]
+  UPDATE v i d e o f i l m e
+SET m i n d e s t a l t e r = 10
+WHERE k a t a l o g n r =2028
+
+\end{lstlisting}
+\begin{lstlisting}[caption=Row Level Trigger,style=sql]
+  CREATE OR REPLACE TRIGGER filme_rows_upd
+BEFORE UPDATE ON f i l m e
+FOR EACH ROW
+DECLARE
+msg VARCHAR2 ( 3 0 ) : = ' filme_rows_upd ' ;
+BEGIN
+dbms_output . p u t _ l i n e ( msg ) ;
+END;
+
+\end{lstlisting}
+\begin{lstlisting}[caption=Konsistenz prüfen,style=sql]
+  CREATE OR REPLACE TRIGGER regdatum_test
+BEFORE INSERT ON r e g i s t r i e r u n g e n
+FOR EACH ROW
+DECLARE
+msg VARCHAR2 ( 3 0 ) : = 'Datum f a l s c h ' ;
+BEGIN
+I F : new . datum > SYSDATE THEN
+RAISE_APPLICATION_ERROR ( −20005 , msg ) ;
+END I F ;
+END;
+
+\end{lstlisting}
+% section trigger_beispiele (end)
+% section dml_trigger_auf_tabellen (end)
+% chapter trigger (end)
 \chapter{Entwurf Verteilte Datenbanken}
 \pic[Beispiel DB]{bspdb.png}
 Anwendungen auf verschiedenen Knoten benötigen
