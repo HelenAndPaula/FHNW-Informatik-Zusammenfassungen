@@ -371,7 +371,7 @@ DECLARE
 msg VARCHAR2 ( 3 0 ) : = 'Datum f a l s c h ' ;
 BEGIN
 I F : new . datum > SYSDATE THEN
-RAISE_APPLICATION_ERROR ( −20005 , msg ) ;
+RAISE_APPLICATION_ERROR ( -20005 , msg ) ;
 END I F ;
 END;
 
@@ -2034,6 +2034,30 @@ Es wurde die Matrix berechnet, die die grösste globale Affinität besitzt. Nun 
 \item ein Parameter: falls in einer Zeile/Query in der Usage Matrix in irgend einer Spalte des Parameters/des Fragments eine 1 steht und in allen Spalten, die nicht zum Fragments gehören, eine 0, dann wird die Zugriffshäufigkeit des Queries zum Resultat addiert
 \item zwei Parameter: gleich wie bei einem Parameter, nur muss mindestens die Bedingung für Spalten des ersten UND des zweiten Fragments zutreffen
 \end{itemize}
-Für das Splitting wählt man ebenfalls die Variante mit dem höchsten Wert aus und drückt es anschliessend in algebraischer Form aus.
+Für das Splitting wählt man ebenfalls die Variante mit dem höchsten Wert aus und drückt es anschliessend in relationaler Algebra aus.
+\section{Lab 11 - Relationale Operationen mit Map Reduce}
+\subsection{Aufgabenstellung}
+Tabellen werden im csv-Format abgegeben. Nun können SQL-Befehler als Map/Reduce-Funktionen in einer Hadoop Umgebung realisiert werden.
+\subsection{Group by mit Count}
+\begin{lstlisting}[style=sql]
+SELECT mnr, COUNT(*)
+FROM registrierungen
+GROUP BY mnr;
+\end{lstlisting}
+\lstinputlisting[language=java,firstline=18]{Labs/Lab11_MapReduce/GroupByWithCount.java}
+\subsection{Join}
+\begin{lstlisting}[style=sql]
+SELECT *
+FROM registrierungen JOIN mitglieder USING (mnr);
+\end{lstlisting}
+\lstinputlisting[language=java,firstline=19]{Labs/Lab11_MapReduce/Join.java}
+\lstinputlisting[language=java,firstline=8]{Labs/Lab11_MapReduce/DatasetTagger.java}
+\subsection{Lösungsbeschrieb}
+\subsubsection{Group by mit Count}
+In diesem Algorithmus muss ausgerechnet werden, wie viel mal eine bestimmte Spalte im csv-File vorkommt.\\
+Der Mapper bekommt nun jede Reihe vom csv-File einzeln. Somit kann diese Linie aufgesplittet und der gewünschte Index extrahiert werden. Dieser extrahierte Wert wird in ein Text-Objekt gewrappt und mit einer 1, gewrappt in ein IntWritable, in den Context geschrieben.\\
+Der Reducer bekommt als key-value Paar ein Text, der den gewünschte Index erhaltet und eine List von Einsen, die der Mapper in den Context geschrieben hat. Aus dieser Liste kann nun ermittelt werden, wie viel mal das Wort im csv-File vorgekommen ist. Als Resultat wird wiederum der Text mit der Summer in den Context geschrieben. Dieser Wert wird dann auf der Konsole ausgegeben.
+\subsubsection{Join}
+Der Reduce-Side Join verlangt, dass der eigentliche Join im Reducer durchgeführt werden muss. Der Mapper ist somit für die Zuordnung der Datensätze zum Join-Key zuständig. Damit zusätzlich ein Left-Join erreicht werden kann, muss der ValueOut des Mappers gekennzeichnet werden, von welcher Seite, bzw. welchem File die Zeile stammt. Dies setzt eine eigene Datenstruktur voraus, die zusätzlich vom Hadoop erkannt werden muss. Als Attribute muss ein Datenelement einen String, sowie eine Enumeration beinhalten. Die Enumeration definiert dabei von welcher Seite des Joins es stammt. Dadurch ist es möglich, im Reducer das Konkatenieren des Endresultats nach den Regeln eines Left-Joins durchzuführen. Damit Hadoop diese Datenstruktur als ValueOut des Mappers erkennt, muss dieser als MapOutputValue konfiguriert werden.
 % part labs_ (end)
 \end{document}
