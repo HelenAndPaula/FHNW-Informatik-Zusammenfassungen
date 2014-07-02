@@ -22,9 +22,9 @@
 \contentsline {section}{\numberline {3.1}Einff\IeC {\"u}hrung}{12}
 \contentsline {section}{\numberline {3.2}Entw\IeC {\"u}rfe}{13}
 \contentsline {subsection}{\numberline {3.2.1}Top Down}{13}
-\contentsline {subsubsection}{\nonumberline Grad der Fragmentierung}{13}
-\contentsline {subsubsection}{\nonumberline Horizontal}{14}
-\contentsline {subsubsection}{\nonumberline Projektion - Vertikal}{14}
+\contentsline {subsubsection}{Grad der Fragmentierung}{13}
+\contentsline {subsubsection}{Horizontal}{14}
+\contentsline {subsubsection}{Projektion - Vertikal}{14}
 \contentsline {subsection}{\numberline {3.2.2}Bottom Up}{14}
 \contentsline {section}{\numberline {3.3}Korrektheit der Fragmentierung}{14}
 \contentsline {section}{\numberline {3.4}Fragmentierungsabk\IeC {\"u}rzungen}{14}
