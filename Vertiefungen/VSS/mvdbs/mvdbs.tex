@@ -31,7 +31,7 @@
 % Code listenings
 \usepackage{color}
 \usepackage{xcolor}
-\usepackage{listings}
+\usepackage{listingsutf8}
 \usepackage{caption}
 \usepackage[T1]{fontenc}
 \DeclareCaptionFont{white}{\color{black}}
@@ -371,7 +371,7 @@ DECLARE
 msg VARCHAR2 ( 3 0 ) : = 'Datum f a l s c h ' ;
 BEGIN
 I F : new . datum > SYSDATE THEN
-RAISE_APPLICATION_ERROR ( −20005 , msg ) ;
+RAISE_APPLICATION_ERROR(-20005,msg);
 END I F ;
 END;
 
@@ -1796,6 +1796,128 @@ Folgende Optionen sind z.B. möglich: \\
 \end{enumerate}
 % section mongodb (end)
 
+\chapter{Semantic Web} % (fold)
+\label{cha:semantic_web}
+\section{World Wide Web} % (fold)
+\label{sec:world_wide_web}
+\begin{itemize}
+  \item HTTP als Protokoll, mit dem der Browser
+Informationen vom Webserver anfordern kann.
+\item HTML als Dokumentenbeschreibungssprache, die
+festlegt, wie die Information gegliedert ist und wie die
+Dokumente verknüpft sind (Hyperlinks).
+\item URLs als eindeutige Adresse bzw. Bezeichnung einer
+Ressource (z. B. einer Webseite), die in Hyperlinks
+verwendet wird.
+\end{itemize}
+\pic{sweb.png}
+%\pic{sweb.png}
+
+\section{Idee des Semantic Webs} % (fold)
+\label{sec:idee_des_semantic_webs}
+Das Semantic Web unterstützt ein verteiltes Netz auf der
+Ebene der Daten und der Beschreibung der Daten statt nur
+auf der Ebene der Dokumente.
+Dies wird u. a. erreicht, indem nicht mehr zwischen den
+Daten und ihrer Beschreibung (Metadaten) unterschieden
+wird.Aber beide bleiben wichtig:
+Ohne Metadaten gibt es nichts,
+worüber man reden kann und
+ohne Daten gibt es nichts zu sagen!
+
+%\pic{sweb2.png}
+%\pic{sweb3.png}
+\pic{sweb2.png}
+\pic{sweb3.png}
+
+\section{Ziele des Semantic Webs} % (fold)
+\label{sec:ziele_des_semantic_webs}
+\begin{itemize}
+  \item Informationen im Web sollen für Maschinen
+verständlich sein
+Bereitstellen eines semantischen Modells, um das
+\item Wissen eines Fachbereichs auszudrücken
+Informationsaustausch zwischen Fachbreichen
+ermöglichen.
+\end{itemize}
+% section ziele_des_semantic_webs (end)
+% chapter semantic_web (end)
+\section{Datenmodell WWW und semantic web} % (fold)
+\label{sec:datenmodell_www}
+\pic{dmweb.png}
+
+
+% section datenmodell_www (end)
+
+\section{Technologieen} % (fold)
+\label{sec:technologieen}
+
+\subsection{RDF - Resource Description Framework} % (fold)
+\label{sub:rdf_resource_description_framework}
+\begin{itemize}
+  \item einfaches Datenmodell
+\item formale Semantik und Schlussfolgerung
+\item erweiterbares Vokabular mit URI
+\item XML Syntax
+\item unterstützt XML Schema Datentypen
+\item Jeder kann Aussagen über beliebige Ressourcen
+machen
+\item Alles, was benannt werden kann, ist eine Ressource
+\item Global eindeutige Namen durch URI
+\item Konstruktion von Aussagen mit Subjekt, Prädikat und
+Objekt
+\item Subjekt und Prädikat sind immer Ressourcen.
+\item Das Objekt kann entweder eine Ressource oder ein
+Literal sein
+\item Dargestellt als gerichteter Graph\\
+Knoten: Subjekt, Objekt\\
+Kanten: Prädikat\\
+
+\end{itemize}
+\pic[RDF Beispiel]{rdf.png}
+
+\textbf{Weitere Elemente:}
+\begin{itemize}
+  \item rdf:type
+\item rdf:ID
+\item rdf:Statement
+\item rdf:Property
+\item rdf:subject
+\item rdf:predicate
+\item rdf:object
+\end{itemize}
+% subsection rdf_resource_description_framework (end)
+\section{RDF und OWL} % (fold)
+\label{sec:rdf_und_owl}
+RDFS: RDF Schema\\
+OWL: Web Ontology Language\\
+RDF bietet allein keine Möglichkeit anzugeben, was
+die Aussagen bedeuten.
+Es braucht:
+ein gemeinsames Vokabular von Begriffen,
+eine hierarchische Organisation der Begriffe
+(Taxonomie),
+Regeln und Beschreibungen, wie Klassen und
+Eigenschaften verwendet werden und wie sie mit
+einander in Beziehung stehen können.
+
+\textbf{Elemente:}
+
+\begin{itemize}
+  \item rdfs:Class
+\item rdfs:domain
+\item rdfs:range
+\item rdfs:subPropertyOf
+\item rdfs:subClassOf
+\item owl:inverseOf
+\item owl:SymmetricProperty
+\item owl:TransitiveProperty
+\item owl:FunctionalPropety
+
+\end{itemize}
+% section rdf_und_owl (end)
+% section technologieen (end)
+
 \part{Labs} % (fold)
 \label{prt:labs_}
 \section{Lab 1 - Trigger}
@@ -1999,13 +2121,13 @@ q4 & telesto & 10\\ \hline
 q5 & telesto & 15\\ \hline
 \end{tabular}
 \subsection{Lösung}
-\bigpic[Globale Affinität]{Labs/Lab3_VertikaleFragmentierung/lab3_global_aff.png}{17cm}
-\bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea.png}{18cm}
-\bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea2.png}{8cm}
-\bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea3.png}{7cm}
-\bigpic[Hilfsmatrizen]{Labs/Lab3_VertikaleFragmentierung/lab3_help.png}{17cm}
-\bigpic[Splitting und Fragmentierung]{Labs/Lab3_VertikaleFragmentierung/lab3_splitting_fragments.png}{18cm}
-\bigpic[Korrektheit]{Labs/Lab3_VertikaleFragmentierung/lab3_correctness.png}{18cm}
+\bigpic[Globale Affinität]{Labs/Lab3_VertikaleFragmentierung/lab3_global_aff.PNG}{17cm}
+\bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea.PNG}{18cm}
+\bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea2.PNG}{8cm}
+\bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea3.PNG}{7cm}
+\bigpic[Hilfsmatrizen]{Labs/Lab3_VertikaleFragmentierung/lab3_help.PNG}{17cm}
+\bigpic[Splitting und Fragmentierung]{Labs/Lab3_VertikaleFragmentierung/lab3_splitting_fragments.PNG}{18cm}
+\bigpic[Korrektheit]{Labs/Lab3_VertikaleFragmentierung/lab3_correctness.PNG}{18cm}
 \subsection{Lösungsbeschrieb}
 \subsubsection{Weg zur globalen Affinität}
 Als Grundlage für die Usage Matrix dienen die Anwendung/Queries. Bei jedem Attribut, auf die ein Query zugreift, wird das Flag[1=true,0=false] in der Matrix gesetzt. Beim Zusammentragen der Attribute muss man sich darauf achten, dass nicht nur der Select berücksichtigt wird, sondern auch andere Zugriffe, wie zum Beispiel im Where.\\
