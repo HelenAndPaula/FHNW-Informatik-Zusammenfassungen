@@ -908,7 +908,7 @@ Commits aller anderen Transaktionen erfolgt, die auf $x$ geschreiben haben.
 \item[2 Phasen Sperrprotokoll] Two Phase Lock : Eine Transaktion folgt dem 2 Phasen Sperrprotokoll
 \begin{itemize}
  \item vor einem Read bzw Write muss ein share Lock bzw exclusive lock verlangt und erlangt werden.
- \item die Sperre darf erst freigegeb werden wenn die zugehörige Operation vollständig durchgeführt worden ist.
+ \item die Sperre darf erst freigegeben werden wenn die zugehörige Operation vollständig durchgeführt worden ist.
  \item nach der ersten Freigabe einer Sperre darf keine neue Sperre verlangt werden.
 \end{itemize}
 \item[Striktes 2 Phasen Sperrprotokoll] 
@@ -924,7 +924,7 @@ Commits aller anderen Transaktionen erfolgt, die auf $x$ geschreiben haben.
 \begin{description}
 \item[Atomicity] Alles oder Nichts
 \item[Consistency] keine Verletzung von Integritätsregeln
-\item[Isolation] keine Nebeneffekte bei Nebenläu gkeit
+\item[Isolation] keine Nebeneffekte bei Nebenläufigkeit
 \item[Durability] Bestätigte Änderungen sind persistent
 \end{description}
 
@@ -979,7 +979,7 @@ denen sie zusammen auftreten
 \subsection{Beispiel : Global nicht serialisierbar}
 \pic{globalns.png}
 
-serialisierbar auf Knoten aber global nicht wegen verscheidene Reihenfolge.Wir wissen im Zentral wie man es macht, aber
+serialisierbar auf Knoten aber global nicht wegen verschiedene Reihenfolge.Wir wissen im Zentral wie man es macht, aber
 
 \section{Realisierung} % (fold)
 \label{sec:realisierung}
@@ -1009,12 +1009,12 @@ serialisierbar auf Knoten aber global nicht wegen verscheidene Reihenfolge.Wir w
 \begin{itemize}
 
 \item Lock Manager auf einigen Knoten verteilt
-\item jeder Lock Manager verantowrtlich für die Sperren einer Menge von Daten 
+\item jeder Lock Manager verantwortlich für die Sperren einer Menge von Daten 
 \item bei Replikaten wird eine Kopie als Primary Copy bestimmt, die anderen sind dann slave copies.
 \item Schreibsperre nur auf Primary Copy.
 \item nach Änderung der Primary Copy,Änderungen zu den slaves bringen.
 \item komplexeres Deadlock Handling
-\item weniger Kimmunikation bessere Performance. 
+\item weniger Kommunikation bessere Performance. 
 \end{itemize}
 % subsection zentrales_2pl (end)
 \subsection{Verteiltes 2PL} % (fold)
@@ -1024,7 +1024,7 @@ serialisierbar auf Knoten aber global nicht wegen verscheidene Reihenfolge.Wir w
   \item jeder Lock anager vrantwortlich für die Sperren siner Daten
   \item ohne Replikate gleich wie Primary Copy 2PL
   \item mit Replikaten wird Read One Write All Protokoll implementiert. 
-  \subitem irgendiene Kope kann zm Lesen verwendet werden  
+  \subitem irgendeine Kopie kann zum Lesen verwendet werden  
   \subitem alle Kopien erhalten Schreibsperre vor Änderung.
   \item \textit{komplexeres Daeadlock Handling}
   \item \textit{höhere Kommunikationskosten als Primary Copy 2PL}
@@ -1037,18 +1037,18 @@ serialisierbar auf Knoten aber global nicht wegen verscheidene Reihenfolge.Wir w
  Deadlocks treten in 2PL auf zur Vermeidung von nicht serialiserbare Aufbaupläne.  Um einen Deadlock aufzulösen muss eine Transaktion abgebrochen werden.
  In einem \textbf{Wait for Graph oder WFG} können Deadlocks erkannt werden.
 
- WFG ist ein gerichtete Graph und dtellt die warte auf Beziehung zwischen Transaktionen dar. Transaktionen sind die Knoten im WFG.\\
+ WFG ist ein gerichtete Graph und stellt die "'warte auf"'-Beziehung zwischen Transaktionen dar. Transaktionen sind die Knoten im WFG.\\
  \begin{framed}
-   Kante $T_i \leftarrow T_j$ beduetet $T_i$ wartet auf die Freigabe der Sperre auf $T_j$ Zyklen in WFG sind dann deadlocks.  
+   Kante $T_i \leftarrow T_j$ bedeutet $T_i$ wartet auf die Freigabe der Sperre auf $T_j$ Zyklen in WFG sind dann deadlocks.  
  \end{framed}
 
 \subsection{Deadlock Erkennung} % (fold)
 \label{sub:deadlock_erkennung}
 \begin{itemize}
   \item Ansatz automatisch Deadlocks erkennen und eine Betroffene Transaktion abbrechen.
-  \item Bevorzugter einsatz braucht viel Resourcen ist aber ein einfaches Verfahren.
+  \item Bevorzugter Einsatz braucht viel Ressourcen ist aber ein einfaches Verfahren.
   \item Timeout: Transaktion die zu lange blockiert ist abbrechen.
-  \subitem einfach zu realiseren. 
+  \subitem einfach zu realisieren. 
   \subitem bricht Transaktionen unnötigerweise an.
   \subitem Deadlocks können lange bestehen.
 \end{itemize}
@@ -1057,14 +1057,14 @@ WFG kann benutzt werden um :
   \item Deadlock zu finden -
   \subitem  wird eine Transaktion blockiert, Kante in WFG einfügen 
   \subitem WFG periodisch für Zyklen durchsuchen.
-  \item Wird ein Deadlock ekannt, eine Transaktion im Zyklus wählen und abbrechen.
+  \item Wird ein Deadlock erkannt, eine Transaktion im Zyklus wählen und abbrechen.
 \end{itemize}
 % subsection deadlock_erkennung (end)
 
 \subsection{Verteilte Deadlocks} % (fold)
 \label{sub:verteilte_deadlocks}
 \begin{itemize}
-  \item Wenn Deadlock zwi Knoten umfasst, kann ihn \textbf{keiner der Knoten erkennen.}
+  \item Wenn Deadlock zwei Knoten umfasst, kann ihn \textbf{keiner der Knoten erkennen.}
   \item Problem lokale und globaler WFG.
   \item Szenario : $t_1 $ und $T_2$ auf Knoten 1 und $T_3,T_4$ auf Konten 2. $T_1 \rightarrow T_2 \rightarrow T_3 \rightarrow T_1 $
 \end{itemize}
@@ -1074,8 +1074,8 @@ WFG kann benutzt werden um :
 \chapter{Verteilte Transaktionen 2} % (fold)
 \label{cha:verteilte_transaktionen_2}
 
-Eine Datenbank ist zuverlässig wenn sie robust und zur Widerherstellung fähig ist.
-Diese Idee steckt auch in den ACID eigenschaften :
+Eine Datenbank ist zuverlässig wenn sie robust und zur Wiederherstellung fähig ist.
+Diese Idee steckt auch in den ACID Eigenschaften :
 \begin{description}
   \item[Atomicity] requires that each transaction is "all or nothing": if one part of the transaction fails, the entire transaction fails, and the database state is left unchanged. An atomic system must guarantee atomicity in each and every situation, including power failures, errors, and crashes. To the outside world, a committed transaction appears (by its effects on the database) to be indivisible ("atomic"), and an aborted transaction does not happen.
 
@@ -1092,30 +1092,30 @@ Wir werden auf \texttt{Atomicity} und \texttt{Durability} fokusieren.
 \begin{description}
   \item[Transaktionsfehler] Transaktionssabbruch, einseitig, Deadlock
   \item[System oder Kontenausfall] Ausfall von CPU , Haputsapeicher , Stromversogung - Hauptspeicherintervale gehen verloren. Teil oder Totalausfall.
-  \item[Plattenfehler] Plattenfehler führen zu verlust gespeicherte Daten. Headcrash, Ausfalldes Controllers.
-  \item[Verbindungsausfall] Verlotene oder nicht zuteilbare Nachrichten. Trennung des Netzwerks.
+  \item[Plattenfehler] Plattenfehler führen zu Verlust gespeicherte Daten. Headcrash, Ausfall des Controllers.
+  \item[Verbindungsausfall] Verlorene oder unzustellbare Nachrichten. Trennung des Netzwerks.
 \end{description}
 
 \section{Lokale oder Verteilte Zuverlässigkeit} % (fold)
 \label{sec:lokale_oder_verteilte_zuverl_ssigkeit}
 
 \begin{description}
-  \item[Zentrales DBS] Behandelt transaktionsfehler, System oder Knotenausfall und Plattenfehler. Bei Systemausfällen oder Plattenfehler handelt es immer um einen vollständigen Ausfall.
-  \item[Verteiltes DBS] \underline{Behandelt zusätzlich} koordination bei Transaktionsfehler, System oder Knotenausfall, Plattenfehler \textit{Verbindungsausfall, erhöhte Verfügbarkeit.} 
+  \item[Zentrales DBS] Behandelt Transaktionsfehler, System oder Knotenausfall und Plattenfehler. Bei Systemausfällen oder Plattenfehler handelt es immer um einen vollständigen Ausfall.
+  \item[Verteiltes DBS] \underline{Behandelt zusätzlich} Koordination bei Transaktionsfehler, System oder Knotenausfall, Plattenfehler \textit{Verbindungsausfall, erhöhte Verfügbarkeit.} 
 \end{description}
 % section lokale_oder_verteilte_zuverl_ssigkeit (end)
 
 \section{Lokale Widerherstellung} % (fold)
 \label{sec:lokale_widerherstellung}
 \pic{lres.png}
-Einzelnbe DBS sind fähig zur Widerherstellung durch :
+Einzelne DBS sind fähig zur Wiederherstellung durch :
 \begin{itemize}
   \item angemessene Schreibstrategie - force oder no force.
   \item Angemessene Seitenersetzung (Paging Stategy) - Steal oder No Steal.
   \item Protokollierung von Änderungen - undo/redo.
   \item Write Ahead Logging (WAL) 
   \subitem Vor Commit (Redo) Log Einträge sichern.
-  \subitem Vor Änderung der permanenten Datenbank (Undo) Log einträge sichern.
+  \subitem Vor Änderung der permanenten Datenbank (Undo) Log Einträge sichern.
   \item Robustes verfahren benutzen
   \subitem Undo, Redo indempotent.
   \subitem ARIES
@@ -1128,9 +1128,9 @@ Einzelnbe DBS sind fähig zur Widerherstellung durch :
   \item Jeder Knoten kann
   \subitem lokaler Teil der Transaktion zuverlässig verarbeiten
   \subitem nach Bedarf lokales Commit, Rollback, Recovery durchführen.
-  \item Übergeordnete Protokolle müssen sich mit der Koordination der beiteiligten Knoten befassen.
+  \item Übergeordnete Protokolle müssen sich mit der Koordination der beteiligten Knoten befassen.
   \subitem Start der Transaktion beim Ursprungsknoten verarbeiten
-  \subitem  Read und Write an den Zielknoten verarbeiten, spezielle vorkehrungen bei Replikation.
+  \subitem  Read und Write an den Zielknoten verarbeiten, spezielle Vorkehrungen bei Replikation.
   \subitem Abort, Commit, und Recover spezifisch für DDB.
 \end{itemize}
 \subsection{Komponenten} % (fold)
@@ -1239,7 +1239,7 @@ Annahmen:
    \end{itemize} 
    \item[Teilnehmer] \hfill \\
    \begin{itemize}
-     \item \texttt{initial} Nach der Wiederherstellung führt Teilnehmer einsieitig ein Abort der Transaktion durch.
+     \item \texttt{initial} Nach der Wiederherstellung führt Teilnehmer einseitig ein Abort der Transaktion durch.
      \item \texttt{ready} Ablauf wie nach Time out im \texttt{ready} Zustand und Termination Protocols anwenden.
      \item \texttt{commit, abort} Nichts tun.
    \end{itemize}
@@ -1259,8 +1259,8 @@ die Rolle des Koordinators übernimmt ist nötig.
 \begin{itemize}
   \item Nicht Blockierend.
   \item Commit Protocol ist \textbf{nicht blockierend genau dann wenn:}
-  \subitem Synchron innerhalb Zustandübergang
-  \subitem Keine Zustände hat die benachbahrt sind zu einem Commit und Abort Zustand. Oder die die zu einem Commit zustand \textit{nicht} benachbart sind aber nicht commitable sind.
+  \subitem Synchron innerhalb Zustandsübergang
+  \subitem Keine Zustände hat die benachbart sind zu einem Commit und Abort Zustand. Oder die die zu einem Commit zustand \textit{nicht} benachbart sind aber nicht commitable sind.
   \subitem Committable : Zustand in dem sichergestellt ist, dass alle
 Teilnehmer mit Vote-Commit geantwortet haben
 \end{itemize}
@@ -1275,47 +1275,47 @@ Teilnehmer mit Vote-Commit geantwortet haben
 \subsection{Grunde für Replikation} % (fold)
 \label{sub:grunde_f_r_replikation}
 \begin{description}
-  \item[Züverlassigkeit] vemeidet "single points of failiure."
+  \item[Züverlassigkeit] vermeidet "single points of failiure."
   \item[Perormance] Vermeidet Kommunikationskosten durch lokalen Zugriffe.
   \item[Skalierbarkeit] Unterstützt Wachstum des Systems
   \item[Andforderungen durch Anwendungen] Spezifikation??
   \item[Probleme] \begin{itemize}
-    \item Transparenz der Replikation - Abbilden logische Zugriffe in Physische Zugriffe auf Kopieen.
-    \item Fragen der Konsistenz : Kritieren und Sync der Kopieen.
+    \item Transparenz der Replikation - Abbilden logische Zugriffe in Physische Zugriffe auf Kopien.
+    \item Fragen der Konsistenz : Kriterien und Sync der Kopieen.
   \end{itemize} 
 \end{description}
 
 % subsection grunde_f_r_replikation (end)
 \subsection{Ausführungsmodell} % (fold)
 \label{sub:ausf_hrungsmodell}
- Es gibt physische Kopien der logischen Objekte im System. Zugriffe betreffen logische Objekte, werden aber in Zugriffe auf pysische Objekte umgesetzt.: \\
+ Es gibt physische Kopien der logischen Objekte im System. Zugriffe betreffen logische Objekte, werden aber in Zugriffe auf physische Objekte umgesetzt.: \\
  \pic{amodel.png}
 % subsection ausf_hrungsmodell (end)
 % section einleitung (end)
 \section{Konsistenzmodelle} % (fold)
 \label{sec:konsistenzmodelle}
-Wie wird die Konsiszenz des globalen DB Zustands definiert?
+Wie wird die Konsistenz des globalen DB Zustands definiert?
 \begin{itemize}
-  \item Transaktionsbezogene Kritieren :
+  \item Transaktionsbezogene Kriterien :
   \subitem One Copy Serializability
   \subitem Snapshot Isolation
   \item Datenbezeogene Kritieren : Eventual Consistency
   \item Begrentzte Inkonsistenz : Epsilon Serializability
 \end{itemize}
-Mit welchen Verfahren wird geneseitige Konsistenz der Replikate erreicht?
+Mit welchen Verfahren wird gegenseitige Konsistenz der Replikate erreicht?
 
 \begin{description}
-  \item[Transaktionsbezoegene Kritieren (Strong Consistency)] \hfill \\
+  \item[Transaktionsbezoegene Kriterien (Strong Consistency)] \hfill \\
   \begin{itemize}
-     \item One Copy Equivalenz : Gegenseitige Konsistenz wenn alle Kopien identische Werte haben.Wirkung einer Transaktion auf replizierte Daten ist die gleiche, wenn sie auf einder einzelnen Datenmenge operierte.
-     \item One Copy Serializability : Wirkung von Transaktionen auf replizierte Daten ist die gleiche wenn sie eine nach der anderen auf eine einzelnen Datenmenge operierten. Histories sind äquivalenz zu einer seriellen Ausführung auf nicht replizierten Daten.
+     \item One Copy Equivalenz : Gegenseitige Konsistenz wenn alle Kopien identische Werte haben.Wirkung einer Transaktion auf replizierte Daten ist die gleiche, wenn sie auf einer einzelnen Datenmenge operierte.
+     \item One Copy Serializability : Wirkung von Transaktionen auf replizierte Daten ist die gleiche wenn sie eine nach der anderen auf eine einzelnen Datenmenge operierten. Histories sind Äquivalenz zu einer seriellen Ausführung auf nicht replizierten Daten.
    \end{itemize} 
    \item[Datenbezogene Kritieren] \hfill \\\
    \begin{itemize}
      \item Angeschwächte formen der Konsistenz:
-     \item Eventual Consistency : letzendlich oder später erreicht. Wenn weitere Updates ausblieben kovergieren die Replikate zu identischen Kopien.
-     \item Nur die Ausbreitung der Updates muss guarantiert sein. Das ist kein problem solange die Nutzer immer auf das gleiche Replikat zugreifen :
-     \subitem Übergang zu Client-Centric Consistency. Guarantiert einem einzelnen Nutzer konsistenten Zugriff auf daten.
+     \item Eventual Consistency : letzendlich oder später erreicht. Wenn weitere Updates ausblieben konvergieren die Replikate zu identischen Kopien.
+     \item Nur die Ausbreitung der Updates muss garantiert sein. Das ist kein problem solange die Nutzer immer auf das gleiche Replikat zugreifen :
+     \subitem Übergang zu Client-Centric Consistency. Guarantiert einem einzelnen Nutzer konsistenten Zugriff auf Daten.
 
    \end{itemize}
    \item[Client Centric Consistency] \hfill  \\
@@ -1329,12 +1329,12 @@ Mit welchen Verfahren wird geneseitige Konsistenz der Replikate erreicht?
 % section konsistenzmodelle (end)
 \section{Update Propogation Strategies} % (fold)
 \label{sec:update_propogation_strategies}
-Können entweder \texttt{Eager(sync)} oder \texttt{Lazy(async)} im kombination mit \texttt{Primary Copy (Master)} oder \texttt{Update Everywhere (Group)}.
+Können entweder \texttt{Eager(sync)} oder \texttt{Lazy(async)} im Kombination mit \texttt{Primary Copy (Master)} oder \texttt{Update Everywhere (Group)}.
 \pic{ups.png}
 \begin{description}
-  \item[Eager(Sync Replikation)] Jede Änderung wird sofot zu allen Kopien übertragen. Übertragung der Änderungen erfolgt innerhalb der Grenzen der Transaktion.ACID Eignenschaften gelten für alle Kopien.
-  \item[Lazy(Async Replikation) ] Zuerst werden die lokalen Kopein geändert. Anschliessend werden die Änderungen zu allen anderen Kopien übertragen \textit{Push/Pull}. Während der Übertraging sind Kopien inkonsistent. Zeitraum der Inkonsistenz kann in Abhängigkeit der Anwendung angepasst werden.
-  \item[Master/Primary Copy Replication] Es gibt eine einzigge Kopie auf der Änderungen ausgeführt werden können (Master). Alle anderen Kopien (Slaves) übernehmen die Änderungen vom Master. Für verschiedene Datenelemente können verschidene knoten Master sein.
+  \item[Eager(Sync Replikation)] Jede Änderung wird sofort zu allen Kopien übertragen. Übertragung der Änderungen erfolgt innerhalb der Grenzen der Transaktion.ACID Eignenschaften gelten für alle Kopien.
+  \item[Lazy(Async Replikation) ] Zuerst werden die lokalen Kopien geändert. Anschliessend werden die Änderungen zu allen anderen Kopien übertragen \textit{Push/Pull}. Während der Übertragung sind Kopien inkonsistent. Zeitraum der Inkonsistenz kann in Abhängigkeit der Anwendung angepasst werden.
+  \item[Master/Primary Copy Replication] Es gibt eine einzige Kopie auf der Änderungen ausgeführt werden können (Master). Alle anderen Kopien (Slaves) übernehmen die Änderungen vom Master. Für verschiedene Datenelemente können verschiedene Knoten Master sein.
   \item[Group/Update everywhere Replication] Änderungen können auf jeder Kopie ausgeführt werden. D.h jeder Knoten der eine Kopie besitzt, kann auf ihr Änderungen ausführen.
 
 \end{description}
@@ -1353,7 +1353,7 @@ Können entweder \texttt{Eager(sync)} oder \texttt{Lazy(async)} im kombination m
     \subitem \textbf{Abort} lokales Abort, slaves informieren.
     \item Slave:
       \subitem \textbf{Read}  Lokales lesen (eigene Kopie), Resultat zurückgeben.
-    \subitem \textbf{Write}  \textbf{Write von Master :} ausführen der writes in richtiger Riehenfolge,\textbf{Writes von Client:} zurückweisen oder an Master wieterleiten. 
+    \subitem \textbf{Write}  \textbf{Write von Master :} ausführen der writes in richtiger Reihenfolge,\textbf{Writes von Client:} zurückweisen oder an Master weiterleiten. 
     \subitem Slave ist Teilnehmer an 2PC der Transaktionen vom Master.
     \item Vorteile : 
     \subitem Änderungen müssen nicht koordiniert werden.
@@ -1837,7 +1837,7 @@ ohne Daten gibt es nichts zu sagen!
 verständlich sein
 Bereitstellen eines semantischen Modells, um das
 \item Wissen eines Fachbereichs auszudrücken
-Informationsaustausch zwischen Fachbreichen
+Informationsaustausch zwischen Fachbereichen
 ermöglichen.
 \end{itemize}
 % section ziele_des_semantic_webs (end)
