@@ -209,7 +209,7 @@ Verbesserung der Performance und der Verfügbarkeit.
 \item Map / Reduce : Verarbeitung
 \item Consistent Hashing : Verteilung
 \item Multiversion Concurrency Control
-\item Paxos\footnote{Protokolle : Verfahren definiert - Griescisches Parlament lausig - wie kann man zu Entscheidung 
+\item Paxos\footnote{Protokolle : Verfahren definiert - Griechisches Parlament lausig - wie kann man zu Entscheidung 
 kommen}
 \end{itemize}
 
@@ -389,14 +389,14 @@ A2: Änderungen an Bikes (auf CALYPSO in Aarau)\\
 A3: Liste der Aufträge mit teuren Bikes vom Typ
 Mountain (auf TELESTO in Olten)\\
 A4: Liste aller Kunden (auf ANANKE in Zürich)\\
-Die Daten sollten dort abgelegt sein, wo sie am häu gsten
+Die Daten sollten dort abgelegt sein, wo sie am häufigsten
 gebraucht werden.\\
 
 \section{Einfführung}
 \begin{itemize}
 \item Entscheid über die Platzierung von Daten auf den
 Knoten eines Computernetzwerks
-\item beeinflüsst die Performance
+\item beeinflusst die Performance
 der DDB und der Anwendungen
 \item lokaler Zugriff ist günstiger
 als Zugriff auf entfernte Knoten
@@ -404,7 +404,7 @@ als Zugriff auf entfernte Knoten
 \subitem welche Anwendungen (Queries)
 \subitem auf welchen Knoten
 \subitem benötigen welche Daten
-\subitem mit welcher Häu gkeit
+\subitem mit welcher Häufigkeit
 \item Resultat:
 \subitem Menge von Fragmenten (Ausschnitte der Daten)
 \subitem zugeteilt auf verschiedene Knote
@@ -420,7 +420,7 @@ nachgelagert an den konzeptionellen Entwurf.
 \begin{enumerate}
 \item wozu überhaupt fragmentieren?
 \item  wie fragmentieren?
-\item  wieviel fragmentieren?
+\item  wie viel fragmentieren?
 \item  wie prüfen der Korrektheit?
 \item  wie Fragmente zuteilen?
 \item  welche Informationen werden benötigt?
@@ -432,7 +432,7 @@ nachgelagert an den konzeptionellen Entwurf.
 Attributswerte sind zu fein.
 \subitem geeignete Teile (Fragmente) der Relationen
 bestimmen
-\subitem Nebenläufikeit steigern bei mehreren Transaktionen
+\subitem Nebenläufigkeit steigern bei mehreren Transaktionen
 mit Zugriff auf verschiedene Fragmente
 \subitem Zusatzkosten für Transaktionen mit Zugriff auf
 Fragmente an verschiedenen Knoten
@@ -457,7 +457,7 @@ Kann kombiniert weden mit Horizontal für optimale Verteilung.
 \section{Korrektheit der Fragmentierung}
 \begin{description}
  \item [Vollständig] Wenn R zerlegt wird $R1,R2 \\ldots R_n$ dann muss jedes Datenelement aus R in einem $R_i$ 
-enthalten sein. (Join mit gemeinsamen Pk - wiederzusammenstellung). (Horizontal umkehroperation - Union)%todo
+enthalten sein. (Join mit gemeinsamen Pk - wiederzusammenstellung). (Horizontal Umkehroperation - Union)%todo
 \item [Rekonstruierbar] Wenn wenn R zerlegt wird in , dann muss es $R1,R2 \\ldots R_n$
 relationale Operatoren geben, so dass R wiederhergestellt
 werden kann.
@@ -485,9 +485,9 @@ Quantitive Informationen:\\
 Bedingungen in Queries bestehen aus:
 \begin{description}
  \item [Simple Predicate p] Vergleich eines Attributs mit einem Wert : Name = ``bla'' Preis < 2000. Allgemein 
-bestehenbedingungen aus boolschen Kombinierung von simple Predicates : $ P = \{p_1,p_2 \ldots , p_m\}$ vom simple 
+bestehende Bedingungen aus boolschen Kombinierung von simple Predicates : $ P = \{p_1,p_2 \ldots , p_m\}$ vom simple 
 predicates bilden wir
-\item[Mintem predicate] $M(P)$ \textbf{Verknupfungen aller simple predicates aus P mit AND und NOT}. bname= bla and not 
+\item[Mintem predicate] $M(P)$ \textbf{Verknüpfungen aller simple predicates aus P mit AND und NOT}. bname= bla and not 
 preis < 2000 z.B \\
 Bemerkung : \\
 $p_1 : $ bname = `Sienna'\\
@@ -500,9 +500,9 @@ p_1 \wedge \neg p_2 \\
 \end{description}
 \pic{mtbsp.png} %todo
 \newpage
-Quantitive Informationen : Brauche ich das minterm oder nicht?
+Quantitative Informationen : Brauche ich das minterm oder nicht?
 \begin{description}
- \item [Minterm selectivity] $sel(m_i)$ Anzahl Tuppel die mit dem Minterm $m_i$ augewählt werden.
+ \item [Minterm selectivity] $sel(m_i)$ Anzahl Tupel die mit dem Minterm $m_i$ ausgewählt werden.
  \item [Access frequency] $acc(m_i)$ Häufigkeit der Anwendungen auf Daten mit dem
 minterm $m_i$ zugreifen
 \end{description}
@@ -511,7 +511,7 @@ minterm $m_i$ zugreifen
 \begin{description}
  \item [Vollständigkeit] Eine Menge von simple predicates ist vollständig genau
 dann, wenn auf beliebige 2 Tupel im gleichen Fragment
-von allen Anwendungen mit der gleichen Häu gkeit
+von allen Anwendungen mit der gleichen Häufigkeit
 zugegriffen wird
 \item[Minimalität] Wird durch ein simple predicate ein Fragment weiter
 aufgeteilt, dann muss es mindestens eine Anwendung
@@ -538,8 +538,8 @@ Preis spielt hier eine rolle - ist relevante Bedingungen. Simple predicates aufn
 
 Verfahren erklären :
 Minimale Menge von simple predicates ausarbeiten aufgrund der Beobachtung Anwendungen.
-wahle eines aus von allen predicates das relevant ist - typ = mounten. 
-erganze meine menge p' um die nächsten nur relevanten \\ 
+wähle eines aus von allen predicates das relevant ist - typ = mounten. 
+ergänze meine menge p' um die nächsten nur relevanten \\ 
 \\ sehe phf beispiel. \\
 p1..p6 = P
 p1 ist relevant wege häufigkeit.\\
@@ -547,15 +547,15 @@ p2, p3 hinzufügen  relevant \\
 p4 nicht relevant weil : typ  =city kann ich ausdrucken im minterm von anderen (Restmenge) p4 ist aber einfacher zu 
 benutzen.\\
 entweder p5, oder p6 aufnehmen sehe oben. MINIMALE MENGE.
-2 HOCH 6 kombinationen. durch impl und wiedersprüche nur 8 sinnvoll. \\
+2 HOCH 6 Kombinationen. durch impl und Wiedersprüche nur 8 sinnvoll. \\
 Beispiel : \\
-Typ = Road und Typ = Mountain ist ein wiederspruch. Bike für beides geht nicht.\\
+Typ = Road und Typ = Mountain ist ein Wiederspruch. Bike für beides geht nicht.\\
 Impl beispiel :
-Typ = road folgt nicht alle anderen typen. alle extrabedingungen mit nots reduzieren. \\ (Schritt 3)
-Fragmente bilden sehe folie.\\
-homogen zugriff auf fragment ?? nutzung alle tupel gleich. zugriffhäufigkeit konform pro fragment. \\
-wichtigsten anwendung betrachte 20 prozent 80 prozent last.
-kleinste sinnvolle einheit. \\
+Typ = road folgt nicht alle anderen Typen. alle Extrabedingungen mit nots reduzieren. \\ (Schritt 3)
+Fragmente bilden sehe Folie.\\
+homogen zugriff auf Fragment ?? Nutzung alle Tupel gleich. Zugriffshäufigkeit konform pro Fragment. \\
+wichtigsten Anwendung betrachte 20 Prozent 80 Prozent last.
+kleinste sinnvolle Einheit. \\
 
 \section{DHF}
 \begin{itemize}
@@ -565,8 +565,8 @@ Relation basiert
 \item stellt sicher, dass Fragmente verschiedener
 Relationen, auf die häu g im Verbund zugegriffen
 wird, dem gleichen Knoten zugeteilt werden
-\item defnieren mit einem Semijoin (Dreickzeichen) \footnote{Mit subquieries definiert: SELECT * FROM AUFTRÄGE WHERE 
-EXISTS (SELECT 1  FROM $KUNDEN_1$ WHERE $KUNDEN_1$.KNR = AUFTRÄGE.KNR) }: Kann als normallen Join geschrieben werden :
+\item defnieren mit einem Semijoin (Dreieckzeichen) \footnote{Mit subqueries definiert: SELECT * FROM AUFTRÄGE WHERE 
+EXISTS (SELECT 1  FROM $KUNDEN_1$ WHERE $KUNDEN_1$.KNR = AUFTRÄGE.KNR) }: Kann als normalen Join geschrieben werden :
 Projektion $\pi_{knr,datum,auftrage.knr}$ (Aufträge $\ltimes $ $Kunden_1$) 
 
 \end{itemize}
@@ -586,7 +586,7 @@ Geht um ``ähnliche Nutzung''.
 \item und werden auf welchen Knoten
 \item wie häufig ausgeführt
 \item mit dem Ziel zu entscheiden
-\subitem welche Attribute werden häu g zusammen verwendet
+\subitem welche Attribute werden häufig zusammen verwendet
 \subitem und sollen deshalb zum selben Fragment gehöre
 \end{itemize}
 
@@ -632,10 +632,10 @@ bilden, was wenig sinnvoll ist
 Attribute
 \subitem Für jedes Paar von Attributen bestimmen, wie oft auf
 sie gemeinsam zugegriffen wird
-\subitem Cluster bilden von Attributen mit hoher Af nität
+\subitem Cluster bilden von Attributen mit hoher Affinität
 \end{itemize}
 
-\subsection{Äffinität}
+\subsection{Affinität}
 \begin{framed}
  \begin{equation}
   aff (A_i,A_j) = \sum_{k : U_{k_i}=1,U_{k_j}=1} \sum_{l=1}^s acc_{k_l} 
@@ -646,7 +646,7 @@ sie gemeinsam zugegriffen wird
 \pic{affin.png}
 %todo tex extra workflowy.
 
-Matrix AA Zeigt Äffinität zweier Attribute :
+Matrix AA Zeigt Affinität zweier Attribute :
 \begin{tabular}{c c c c c}
  &\textbf{BName} & \textbf{Preis}  & \textbf{Typ} & \textbf{Bestand}\\
 BName & 45 & 0 & 0 & 45 \\
@@ -658,7 +658,7 @@ Bestand & 45 & 5 & 3 & 53 \\
 \begin{framed}
  Skalarprodukt benachbarter Spalten
 misst die Ähnlichkeit des
-Zugriffsmusters: Af nität der
+Zugriffsmusters: Affinität der
 Nachbarschaft (bond):
 \begin{equation}
  \sum_{z=1}^{n} = aff(A_z,A_x)*aff(A_z,A_y)
@@ -697,7 +697,7 @@ Typ, Bestand:\\
 75 x 5 + 78 x 3 + 3 x 53 = 768\\
 Globale Affinität: 1128\\
 
-\section{Bond Energie Algorythmus}
+\section{Bond Energie Algorithmus}
 \begin{itemize}
 \item Gegeben $n \times n$ Matrix AA der Affinitäten
 \subitem Beliebige 2 Spalte aus AA wählen und in Resultats Matrix CA stellen
@@ -747,11 +747,11 @@ zugegriffen wird (gut)
 (schlecht)
 \item Trennqualität $sq = acc(VF_1 ) \times acc(VF_2 ) - acc(VF_1 , VF_2 )^2$
 maximieren
-\subitem acc(VF 1 ): Summe Zugriffshäu gkeiten der Queries
+\subitem acc(VF 1 ): Summe Zugriffshäufigkeiten der Queries
 ausschliesslich auf VF 1
-\subitem acc(VF 2 ): Summe Zugriffshäu gkeiten der Queries
+\subitem acc(VF 2 ): Summe Zugriffshäufigkeiten der Queries
 ausschliesslich auf VF 2
-\subitem acc(VF 1 , VF 2 ): Summe Zugriffshäu gkeiten der Queries
+\subitem acc(VF 1 , VF 2 ): Summe Zugriffshäufigkeiten der Queries
 auf VF 1 und VF 2
 \end{itemize}
 \pic{vfse.png}
@@ -778,7 +778,7 @@ Umformen der SQl Queries in ausführbare Operationen für den Datenzugriff:
 
 \section{Zentralisiert vs Dezentraliziert}
 \begin{description}
- \item [Zentraliziertes System] 
+ \item [Zentralisiertes System] 
  \begin{itemize}
   \item Umformen der SQL Anfrage in ausführbare Einheiten - Operationen der Rationalen Algebra.
   \item Auswählen des besten Ausführungsplans
@@ -787,13 +787,13 @@ Umformen der SQl Queries in ausführbare Operationen für den Datenzugriff:
                            \item berücksichtigen der Kommunikationskosten
                            \item auswählen des besten Knotens.
                           \end{itemize}
-Relationen werden mit den ersten drei Buchstaben von der DB Tabellenname zufkünfig benannt.
+Relationen werden mit den ersten drei Buchstaben von der DB Tabellenname zukünftig benannt.
 \section{Überblick}
 \subsection{Ziel der Optimierung}
 \pic{zdo.png}
 
 \begin{itemize}
- \item durch Umformen und Optimieren soll eine Kosenfunktion mimimiert werden
+ \item durch Umformen und Optimieren soll eine Kostenfunktion minimiert werden
  \subitem CPU Zeit
  \subitem IO Zeit
  \subitem Comm Zeit
@@ -815,14 +815,14 @@ $ \times $ : $O(n^2)$
 \pic{vab}
 
 \subsection{Zerlegung}
-Sql Query zerlegen und umformen in relationale Algebra unter verwendung des globalen Schemas :
+Sql Query zerlegen und umformen in relationale Algebra unter Verwendung des globalen Schemas :
 \begin{itemize}
  \item Normalisierung (Bedingung in Where Klausel)
  \item Analyse um inkorrekte Queries zurückzuwechseln.
  \subitem Analyse nach Typ
  \subitem Analyse nach Semantik
  \item Vereinfachung, Redundanz beseitigen.
- \item Umformen in optimalen Ausdruck der relationalen Algrbra.
+ \item Umformen in optimalen Ausdruck der relationalen Algebra.
  
 \end{itemize}
 
@@ -833,13 +833,13 @@ Sql Query zerlegen und umformen in relationale Algebra unter verwendung des glob
  \subitem Ersetzen der globalen Relation mit den Fragmenten :
  \subitem $\cup$ für Horizontale Fragmentierung
  \subitem $\bowtie$ für Vertikale Fragmentierung.
- \item Optimierng der lokalisierten Anfrage dürch Reduktion mit Selektion oder Join.
+ \item Optimierung der lokalisierten Anfrage durch Reduktion mit Selektion oder Join.
 \end{itemize}
 
 \subsection{PHF}
 \pic{phfr.png}
 \textbf{Bemerkung:} Eine Selektion auf einem Fragment mit einer Bedingung, die der Bedingung für die Fragmentierung 
-wiederspricht , ergibt leere Resultatsrelationen.
+widerspricht , ergibt leere Resultatsrelationen.
 
 \subsection{Schritten für Lokalisierung PHF}
 \begin{description}
@@ -849,7 +849,7 @@ wiederspricht , ergibt leere Resultatsrelationen.
  \item[Schritt 3] Reduktion: \\
  \pic{phflok1.png}
  Eine Reduktion ist möglich wenn die Fragmentierung mit dem Join Attribute erfolgte. Wenn sich die Bedingungen der 
-Fragmente wiedersprechen, resultiert eine leere Relation. Vor einer möglichen Reduktion wird das Distributivgesetz 
+Fragmente widersprechen, resultiert eine leere Relation. Vor einer möglichen Reduktion wird das Distributivgesetz 
 angewendet : \\
 $ (R_1 \cup R_2) \bowtie S = (R1 \bowtie S) \cup (R_2 \bowtie S) $
 \end{description}
@@ -884,9 +884,9 @@ Eine Projektion auf einem Fragment ist nutzlos wenn die Attribute der Projektion
 \end{tabular}
 
 \begin{description}
- \item [Transaktion] Folge von Read und Write Operationen auf beliebiegen Datenelementen x. Letzte Operation entweder 
+ \item [Transaktion] Folge von Read und Write Operationen auf beliebigen Datenelementen x. Letzte Operation entweder 
 Commit oder Abort.
-\item[Schedule,History] ist eine foge von Datenbank Scheduler auf der Datenbank ausgeführten Lese und 
+\item[Schedule,History] ist eine Folge von Datenbank Scheduler auf der Datenbank ausgeführten Lese und 
 Screiboperationen.Es besteht aus Operationen verschiedener Transaktionen.Ordnung der Operationen innerhalb einer 
 Transaktion muss beibehalten werden.
 \item[Serielle History] Eine History H heisst seriell, wenn jeweils alle Operationen einer Transaktion direkt 

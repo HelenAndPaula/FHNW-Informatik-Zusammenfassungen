@@ -35,9 +35,9 @@
 \contentsline {chapter}{\numberline {4}Vertikale Fragmentierung}{18}
 \contentsline {section}{\numberline {4.1}Zugriffseigenschaften}{18}
 \contentsline {section}{\numberline {4.2}Cluster Methode}{19}
-\contentsline {subsection}{\numberline {4.2.1}\IeC {\"A}ffinit\IeC {\"a}t}{19}
+\contentsline {subsection}{\numberline {4.2.1}Affinit\IeC {\"a}t}{19}
 \contentsline {subsection}{\numberline {4.2.2}Vertauschen bei Affinit\IeC {\"a}t}{20}
-\contentsline {section}{\numberline {4.3}Bond Energie Algorythmus}{20}
+\contentsline {section}{\numberline {4.3}Bond Energie Algorithmus}{20}
 \contentsline {section}{\numberline {4.4}VF - Vertical Fragmentation Example}{20}
 \contentsline {section}{\numberline {4.5}VF : Cluster m\IeC {\"o}glichketen}{21}
 \contentsline {section}{\numberline {4.6}Schluss : VF}{21}
