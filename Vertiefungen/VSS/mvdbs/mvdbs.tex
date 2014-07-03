@@ -1077,7 +1077,7 @@ WFG kann benutzt werden um :
 Eine Datenbank ist zuverlässig wenn sie robust und zur Wiederherstellung fähig ist.
 Diese Idee steckt auch in den ACID Eigenschaften :
 \begin{description}
-  \item[Atomicity] requires that each transaction is "all or nothing": if one part of the transaction fails, the entire transaction fails, and the database state is left unchanged. An atomic system must guarantee atomicity in each and every situation, including power failures, errors, and crashes. To the outside world, a committed transaction appears (by its effects on the database) to be indivisible ("atomic"), and an aborted transaction does not happen.
+  \item[Atomicity] requires that each transaction is "'all or nothing"': if one part of the transaction fails, the entire transaction fails, and the database state is left unchanged. An atomic system must guarantee atomicity in each and every situation, including power failures, errors, and crashes. To the outside world, a committed transaction appears (by its effects on the database) to be indivisible ("'atomic"'), and an aborted transaction does not happen.
 
 \item[Consistency] The consistency property ensures that any transaction will bring the database from one valid state to another. Any data written to the database must be valid according to all defined rules, including but not limited to constraints, cascades, triggers, and any combination thereof. This does not guarantee correctness of the transaction in all ways the application programmer might have wanted (that is the responsibility of application-level code) but merely that any programming errors do not violate any defined rules.
 
@@ -1275,7 +1275,7 @@ Teilnehmer mit Vote-Commit geantwortet haben
 \subsection{Grunde für Replikation} % (fold)
 \label{sub:grunde_f_r_replikation}
 \begin{description}
-  \item[Züverlassigkeit] vermeidet "single points of failiure."
+  \item[Züverlassigkeit] vermeidet "'single points of failiure."'
   \item[Perormance] Vermeidet Kommunikationskosten durch lokalen Zugriffe.
   \item[Skalierbarkeit] Unterstützt Wachstum des Systems
   \item[Andforderungen durch Anwendungen] Spezifikation??
@@ -1594,7 +1594,7 @@ Replikation\\
 \item \textbf{ Wie werden Daten repliziert? Wie wird die Konsistenz der Daten sichergestellt?}\\
 \begin{itemize}
   \item Auf jeder Instanz ist ein Replikationsfaktor N definiert, wobei alle Daten auf N Hosts repliziert werden
-\item Jeder Schlüsser wird an einen "Coordinator Node" zugewiesen, welcher einerseits die Daten dazu lokal speichert und andererseits die Daten auf N-1 Knoten verteilt
+\item Jeder Schlüsser wird an einen "'Coordinator Node"' zugewiesen, welcher einerseits die Daten dazu lokal speichert und andererseits die Daten auf N-1 Knoten verteilt
 \item Daten können nach verschiedenen Richtlinien verteilt werden z.B. Rack Unaware, Rack Aware und Datacenter Aware um Risiken besser zu vermindern
 \item Cassandra bestimmt mit hilfe von Zookeeper einen Leader, welcher die Verantwortlichkeit für Datenbereiche an die Knoten verteilt
 \item Metadaten werden lokal und fehlertolerant in Zookeeper gespeichert
@@ -1761,28 +1761,28 @@ Ein Replica Set ist eine Gruppe von von Knoten, die Kopien voneinander sind. Ein
 \item[REPLICATION]
 Operationen welche die Datenbank auf dem PRIMARY verändern, werden in einem Log namens
 oplog gespeichert. Der 'oplog' enthält eine geordnete Menge von idempotenten Operationen,
-welche auf den "Secondaries" repliziert werden. Die Grösse des oplogs beträgt standardmässig 5%
+welche auf den "'Secondaries"' repliziert werden. Die Grösse des oplogs beträgt standardmässig 5%
 des freien Festplattenspeichers. Der oplog enthält Änderungen einiger Stunden.
-Sollte ein Secondary ausfallen, kann er so wieder "aufholen". Sollte ein Secondary länger als
-die Periode vom oplog beträgt ausfallen, dann werden mittels "initial synchronization" alle Datenbanken usw. komplett
+Sollte ein Secondary ausfallen, kann er so wieder "'aufholen"'. Sollte ein Secondary länger als
+die Periode vom oplog beträgt ausfallen, dann werden mittels "'initial synchronization"' alle Datenbanken usw. komplett
 repliziert.
 
 \item[ELECTIONS AND FAILOVER]
 Falls der Primary aus irgendeinem Grund ausfallen sollte, dann bestimmen die Secondaries unter sich
-einen neuen Primary. Dieser Prozess wird "Election" genannt. Sobald der neue Primary bestimmt wurde,
+einen neuen Primary. Dieser Prozess wird "'Election"' genannt. Sobald der neue Primary bestimmt wurde,
 konfigurieren sich die anderen Seconaries selber, so dass sie nun Updates vom neuen Primary erhalten.
 Sollte der ausgefallene Primary wieder online kommen, erkennt er, dass er nicht mehr der Primary ist
 und wird zu einem Secondary.
 
-\item[ELECTION PRIORITY] Der "Election" Prozess kann mit einer Prioritäts-Konfiguration beinflusst werden. Der Secondary
+\item[ELECTION PRIORITY] Der "'Election"' Prozess kann mit einer Prioritäts-Konfiguration beinflusst werden. Der Secondary
 mit der höchsten Priorität wird dann Primary. Zum Beispiel könnte man alle Instanzen in
-einem "Secondary Data Center" so konfigurieren, dass nur wenn das komplette "Primary Data Center" ausfällt,
+einem "'Secondary Data Center"' so konfigurieren, dass nur wenn das komplette "'Primary Data Center"' ausfällt,
 einer der Secondarys dann Primary wird.
 
 \item[CONFIGURABLE WRITE AVAILABILITY]
-MongoDB besitzt die Möglichkeit, dass ein Client bei jeder Abfrage einen "write concern" mitteilen kann.
+MongoDB besitzt die Möglichkeit, dass ein Client bei jeder Abfrage einen "'write concern"' mitteilen kann.
 Dieser gibt an, wann der Client eine Antwort erhält. Der Client wartet dann solange auf eine Antwort bis der
-gewünschte "write concern" eingetreten ist und kann so z.B. sicherstellen, dass die Daten definitiv geschrieben wurden.
+gewünschte "'write concern"' eingetreten ist und kann so z.B. sicherstellen, dass die Daten definitiv geschrieben wurden.
 
 Folgende Optionen sind z.B. möglich: \\
 - Client braucht keine Antwort, (One-Way) -> Keine Garantie, dass Daten geschrieben werden\\
