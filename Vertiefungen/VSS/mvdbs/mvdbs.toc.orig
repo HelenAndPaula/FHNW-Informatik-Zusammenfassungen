@@ -22,9 +22,15 @@
 \contentsline {section}{\numberline {3.1}Einff\IeC {\"u}hrung}{12}
 \contentsline {section}{\numberline {3.2}Entw\IeC {\"u}rfe}{13}
 \contentsline {subsection}{\numberline {3.2.1}Top Down}{13}
+<<<<<<< HEAD
 \contentsline {subsubsection}{\nonumberline Grad der Fragmentierung}{13}
 \contentsline {subsubsection}{\nonumberline Horizontal}{14}
 \contentsline {subsubsection}{\nonumberline Projektion - Vertikal}{14}
+=======
+\contentsline {subsubsection}{Grad der Fragmentierung}{13}
+\contentsline {subsubsection}{Horizontal}{14}
+\contentsline {subsubsection}{Projektion - Vertikal}{14}
+>>>>>>> ef992df212d5dad120674a1a1516ae48e3c001d0
 \contentsline {subsection}{\numberline {3.2.2}Bottom Up}{14}
 \contentsline {section}{\numberline {3.3}Korrektheit der Fragmentierung}{14}
 \contentsline {section}{\numberline {3.4}Fragmentierungsabk\IeC {\"u}rzungen}{14}
@@ -94,6 +100,7 @@
 \contentsline {section}{\numberline {9.3}Neo4J}{48}
 \contentsline {section}{\numberline {9.4}Bigtable}{50}
 \contentsline {section}{\numberline {9.5}MongoDB}{52}
+<<<<<<< HEAD
 \contentsline {chapter}{\numberline {10}Semantic Web}{56}
 \contentsline {section}{\numberline {10.1}World Wide Web}{56}
 \contentsline {section}{\numberline {10.2}Idee des Semantic Webs}{56}
@@ -117,10 +124,27 @@
 \contentsline {subsection}{\numberline {10.8.2}L\IeC {\"o}sung}{64}
 \contentsline {subsection}{\numberline {10.8.3}L\IeC {\"o}sungsbeschrieb}{64}
 \contentsline {subsubsection}{\nonumberline Weg zur globalen Affinit\IeC {\"a}t}{64}
-\contentsline {section}{\numberline {10.9}Lab 11 - Relationale Operationen mit Map Reduce}{66}
-\contentsline {subsection}{\numberline {10.9.1}Aufgabenstellung}{66}
-\contentsline {subsection}{\numberline {10.9.2}Group by mit Count}{66}
-\contentsline {subsection}{\numberline {10.9.3}Join}{68}
-\contentsline {subsection}{\numberline {10.9.4}L\IeC {\"o}sungsbeschrieb}{71}
-\contentsline {subsubsection}{\nonumberline Group by mit Count}{71}
-\contentsline {subsubsection}{\nonumberline Join}{71}
+=======
+\contentsline {part}{\numberline {II}Labs}{56}
+\contentsline {section}{\numberline {9.6}Lab 1 - Trigger}{57}
+\contentsline {subsection}{\numberline {9.6.1}Event Logging}{57}
+\contentsline {subsubsection}{Aufgabenstellung}{57}
+\contentsline {subsubsection}{L\IeC {\"o}sung}{57}
+\contentsline {subsubsection}{L\IeC {\"o}sungsbeschrieb}{59}
+\contentsline {subsection}{\numberline {9.6.2}Referential Integrity}{59}
+\contentsline {subsubsection}{Aufgabenstellung}{59}
+\contentsline {subsubsection}{L\IeC {\"o}sung}{59}
+\contentsline {subsubsection}{L\IeC {\"o}sungsbeschrieb}{60}
+\contentsline {section}{\numberline {9.7}Lab 3 - Verteilter Datenbankentwurf}{60}
+\contentsline {subsection}{\numberline {9.7.1}Aufgabenstellung}{60}
+\contentsline {subsection}{\numberline {9.7.2}L\IeC {\"o}sung}{61}
+\contentsline {subsection}{\numberline {9.7.3}L\IeC {\"o}sungsbeschrieb}{61}
+\contentsline {subsubsection}{Weg zur globalen Affinit\IeC {\"a}t}{61}
+\contentsline {section}{\numberline {9.8}Lab 11 - Relationale Operationen mit Map Reduce}{63}
+\contentsline {subsection}{\numberline {9.8.1}Aufgabenstellung}{63}
+\contentsline {subsection}{\numberline {9.8.2}Group by mit Count}{63}
+\contentsline {subsection}{\numberline {9.8.3}Join}{65}
+\contentsline {subsection}{\numberline {9.8.4}L\IeC {\"o}sungsbeschrieb}{69}
+\contentsline {subsubsection}{Group by mit Count}{69}
+\contentsline {subsubsection}{Join}{69}
+>>>>>>> ef992df212d5dad120674a1a1516ae48e3c001d0

@@ -31,37 +31,12 @@
 % Code listenings
 \usepackage{color}
 \usepackage{xcolor}
-\usepackage{listings}
+\usepackage{listingsutf8}
 \usepackage{caption}
 \usepackage[T1]{fontenc}
 \DeclareCaptionFont{white}{\color{black}}
 \DeclareCaptionFormat{listing}{\colorbox{white}{\parbox{\textwidth}{#1#2#3}}}
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white,font=bf}
-\lstdefinestyle{java}{
-   language=Java,
-   basicstyle=\footnotesize\ttfamily, % Standardschrift
-   backgroundcolor=\color[RGB]{230,230,230}, % Hintergrundfarbe
-   numbers=left,               % Ort der Zeilennummern
-   numberstyle=\tiny,          % Stil der Zeilennummern
-   stepnumber=1,               % Abstand zwischen den Zeilennummern
-   numbersep=5pt,              % Abstand der Nummern zum Text
-   tabsize=2,                  % Groesse von Tabs
-   extendedchars=true,         % Erlaubt non-ascii Charakter, aber nicht mit UTF8
-   literate={ä}{{\"a}}1 {ü}{{\"u}}1 {ö}{{\"o}}1,
-   breaklines=true,            % Zeilen werden Umgebrochen
-   frame=trbl,                 % Rahmen
-   stringstyle=\color[RGB]{42,0,255} \ttfamily, % Farbe der String
-   keywordstyle=\color[RGB]{127,0,85} \ttfamily, % Farbe der Keywords
-   commentstyle=\color[RGB]{63,127,95} \ttfamily, % Farbe des Kommentars
-   showspaces=false,           % Leerzeichen anzeigen ?
-   showtabs=false,             % Tabs anzeigen ?
-   xleftmargin=17pt,
-   framexleftmargin=17pt,
-   framexrightmargin=5pt,
-   framexbottommargin=5pt,
-   framextopmargin=5pt,
-   showstringspaces=false,     % Leerzeichen in Strings anzeigen ?
-}
 \lstdefinestyle{sqlNoTitle}{
    language=SQL,
    basicstyle=\footnotesize\ttfamily, % Standardschrift
@@ -359,7 +334,7 @@ TABLE, VARRAY, RECORD
 \end{description}
 % section plsql (end)
 
-\sectionm{Trigger Beispiele} % (fold)
+\section{Trigger Beispiele} % (fold)
 \label{sec:trigger_beispiele}
 \begin{lstlisting}[caption=Statement Level Trigger,style=sql]
   CREATE OR REPLACE TRIGGERBEFORE UPDATE ON f i l m e
@@ -396,7 +371,11 @@ DECLARE
 msg VARCHAR2 ( 3 0 ) : = 'Datum f a l s c h ' ;
 BEGIN
 I F : new . datum > SYSDATE THEN
+<<<<<<< HEAD
 RAISE_APPLICATION_ERROR(-20005,msg);
+=======
+RAISE_APPLICATION_ERROR ( -20005 , msg ) ;
+>>>>>>> ef992df212d5dad120674a1a1516ae48e3c001d0
 END I F ;
 END;
 
@@ -1945,8 +1924,8 @@ einander in Beziehung stehen können.
 
 \part{Labs} % (fold)
 \label{prt:labs_}
-\chapter{Lab 1 - Trigger}
-\section{Event Logging}
+\section{Lab 1 - Trigger}
+\subsection{Event Logging}
 \subsubsection{Aufgabenstellung}
 Manipulationen auf der Tabelle REGISTRIERUNGEN loggen. Trigger und Log-Tabelle befinden sich auf dem gleichen System wie REGISTRIERUNGEN.\\
 \subsubsection{Lösung}
@@ -2191,14 +2170,14 @@ SELECT mnr, COUNT(*)
 FROM registrierungen
 GROUP BY mnr;
 \end{lstlisting}
-\lstinputlisting[language=java,firstline=18,style=java]{Labs/Lab11_MapReduce/GroupByWithCount.java}
+\lstinputlisting[language=java,firstline=18]{Labs/Lab11_MapReduce/GroupByWithCount.java}
 \subsection{Join}
 \begin{lstlisting}[style=sql]
 SELECT *
 FROM registrierungen JOIN mitglieder USING (mnr);
 \end{lstlisting}
-\lstinputlisting[language=java,firstline=19,style=java]{Labs/Lab11_MapReduce/Join.java}
-\lstinputlisting[language=java,firstline=8,style=java]{Labs/Lab11_MapReduce/DatasetTagger.java}
+\lstinputlisting[language=java,firstline=19]{Labs/Lab11_MapReduce/Join.java}
+\lstinputlisting[language=java,firstline=8]{Labs/Lab11_MapReduce/DatasetTagger.java}
 \subsection{Lösungsbeschrieb}
 \subsubsection{Group by mit Count}
 In diesem Algorithmus muss ausgerechnet werden, wie viel mal eine bestimmte Spalte im csv-File vorkommt.\\
