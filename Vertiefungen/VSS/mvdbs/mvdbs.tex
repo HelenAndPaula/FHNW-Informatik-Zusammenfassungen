@@ -507,14 +507,14 @@ Kann kombiniert weden mit Horizontal für optimale Verteilung.
 
 \section{Korrektheit der Fragmentierung}
 \begin{description}
- \item [Vollständig] Wenn R zerlegt wird $R1,R2 \\ldots R_n$ dann muss jedes Datenelement aus R in einem $R_i$ 
-enthalten sein. (Join mit gemeinsamen Pk - wiederzusammenstellung). (Horizontal Umkehroperation - Union)%todo
-\item [Rekonstruierbar] Wenn wenn R zerlegt wird in , dann muss es $R1,R2 \\ldots R_n$
+ \item [Vollständig] Wenn R zerlegt wird $R_1,R_2 \ldots R_n$ dann muss jedes Datenelement aus R in einem $R_i$ 
+enthalten sein. (Join mit gemeinsamen Pk - wiederzusammenstellung). (Horizontal Umkehroperation - Union)%
+\item [Rekonstruierbar] Wenn wenn R zerlegt wird in , dann muss es $R_1,R_2 \ldots R_n$
 relationale Operatoren geben, so dass R wiederhergestellt
 werden kann.
-\item[Disjunkt] wenn R horizontal zerlegt wird in $R1,R2 \\ldots R_n$, dann
+\item[Disjunkt] wenn R horizontal zerlegt wird in $R1,R2 \ldots R_n$, dann
 müssen die Fragmente paarweise disjunkt sein.
-wenn R vertikal zerlegt wird in $R1,R2 \\ldots R_n$, dann müssen
+wenn R vertikal zerlegt wird in $R_1,R_2 \ldots R_n$, dann müssen
 die Fragmente bezogen auf die nichtprimen Attribute
 paarweise disjunkt sein.
 \end{description}
@@ -2562,7 +2562,7 @@ end;
 \label{sec:l_sungen_der_konflikte}
 
 \subsection{Update Konflikt Lösung}
-Im folgenden soll eine Update-Konflikt-Lösung\footnote{\url{http://docs.oracle.com/cd/E11882_01/server.112/e10707/rarconflictres.htm#REPMA354}} definiert werden, damit bei einem Update, ein allfälliger Konflikt automatisch behoben wird.
+Im folgenden soll eine Update-Konflikt-Lösung\footnote{http://docs.oracle.com/cd/E11882_01/server.112/e10707/rarconflictres.htm\#REPMA354} definiert werden, damit bei einem Update, ein allfälliger Konflikt automatisch behoben wird.
 
 Zusätzlich wird überprüft, dass bei einem INSERT- oder DELETE-Statement die Lösungsstrategie nicht angewendet wird.
 \begin{lstlisting}[style=sql, title=Definiton der Update-Konflikt-Lösung als repadmin auf telesto]
