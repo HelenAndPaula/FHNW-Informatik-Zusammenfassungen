@@ -1574,7 +1574,7 @@ der dem Primärschlüssel der Master Table entspricht.
 Ein Updatable Materialized View Log:\\
 \begin{verbatim}
    ( USLOG$_Materialized_View_Name)
- \end{verbatim}  \\wird verwendet um
+ \end{verbatim}  wird verwendet um
 zu bestimmen, welche Zeilen der Materialized View überschrieben oder entfernt werden
 müssen.
 Ein interner Trigger zeichnet die Änderungen an der Updatable Materialized View im Log
@@ -1585,8 +1585,10 @@ auf.
 Werden Änderungen sowohl auf der Master Site als auch auf der Materialized View Si-
 te durchgeführt, kann es zu Konflikten kommen. Oracle bietet die Möglichkeit, für ver-
 schiedene Anforderungen spezielle Regeln zur Konfliktauflösung zu hinterlegen. Siehe da-
-zu das Kapitel 6 in Oracle Database Advanced Replication Management API Reference
+zu das Kapitel 6 in Oracle Database Advanced Replication Management API Reference:
+\begin{verbatim}
 http://download.oracle.com/docs/cd/E11882_01/server.112/e10707/toc.htm
+\end{verbatim}
 % section konfliktaufl_sung (end)
 % chapter replikation_ii (end)
 
@@ -1607,13 +1609,13 @@ movement.
   \item[Avoidance of unneeded complexity:]  databases provide a variety of features and strict data
 consistency. But this rich feature set and the ACID properties implemented by RDBMSs might be more
 than necessary for particular applications and use cases.
-As an example, Adobe’s ConnectNow holds three copies of user session data; these replicas do not neither
+As an example, Adobe's ConnectNow holds three copies of user session data; these replicas do not neither
 have to undergo all consistency checks of a relational database management systems nor do they have to
 be persisted. Hence, it is fully sufficient to hold them in memory (cf. [Com09b]).
 \item[High Throughput]Some NoSQL databases provide a significantly higher data throughput than traditional
-RDBMSs. For instance, the column-store Hypertable which pursues Google’s Bigtable approach allows the
+RDBMSs. For instance, the column-store Hypertable which pursues Google's Bigtable approach allows the
 local search engine Zvent to store one billion data cells per day [Jud09]. To give another example, Google
-is able to process 20 petabyte a day stored in Bigtable via it’s MapReduce approach [Com09b].
+is able to process 20 petabyte a day stored in Bigtable via it's MapReduce approach [Com09b].
 \item[Horizontal Scalability and Running on Commodity Hardware ] NoSql trying to address problems such as Data Scaling, Performance of single servers, Rigid schema design.Nosql databases are designed to scale well in the horizontal direction and not rely on highly available hardware. Sharding is easier.
 \item[Avoidance of expensive Object Relational Mapping]Most of the NoSQL databases are designed
 to store data structures that are either simple or more similar to the ones of object-oriented program-
@@ -1658,7 +1660,7 @@ Following databases work well:
 \end{itemize}
 \item The RDBMS plus Caching-Layer Pattern/Workaround vs. Systems Built from Scratch with Scalability in Mind : As scalability requirements grow and these technologies are less and less capable to suit with them. In
 addition, as NoSQL datastores are arising Hoff comes to the conclusion that “[with] a little perspective,
-it’s clear the MySQL + memcached era is passing. It will stick around for a while. Old technologies
+it's clear the MySQL + memcached era is passing. It will stick around for a while. Old technologies
 seldom fade away completely.” (cf. [Hof10c]). As examples, he cites big websites and players that have
 moved towards non-relational datastores including LinkedIn, Amazon, Digg and Twitter. Hoff mentions
 the following reasons for using NoSQL solutions which have been explained earlier in this paper:
@@ -1697,7 +1699,7 @@ fallacies of distributed computing (cf. [Gos07]2 :
 \item  Latency is zero
 \item  Bandwidth is infinite
 \item  The network is secure
-\item  Topology doesn’t change
+\item  Topology doesn't change
 \item  There is one administrator
 \item  Transport cost is zero
 \item  The network is homogeneous
@@ -2332,13 +2334,13 @@ DEFAULT TABLESPACE studspace
 TEMPORARY TABLESPACE temp;
 BEGIN
 DBMS_REPCAT_ADMIN.GRANT_ADMIN_ANY_SCHEMA (
-username => ’repadmin’);
+username => 'repadmin');
 END;
 
 BEGIN
 DBMS_REPCAT_ADMIN.REGISTER_USER_REPGROUP (
-username => ’repadmin’,
-privilege_type => ’receiver’,
+username => 'repadmin',
+privilege_type => 'receiver',
 list_of_gnames => NULL);
 END;
 
@@ -2348,8 +2350,8 @@ TEMPORARY TABLESPACE temp;
 -- any GRANTS?
 BEGIN
 DBMS_REPCAT_ADMIN.REGISTER_USER_REPGROUP (
-username => ’proxy_mviewadmin’,
-privilege_type => ’proxy_snapadmin’,
+username => 'proxy_mviewadmin',
+privilege_type => 'proxy_snapadmin',
 list_of_gnames => NULL);
 END;
 
@@ -2384,7 +2386,7 @@ TEMPORARY TABLESPACE temp;
 
 BEGIN
 DBMS_REPCAT_ADMIN.GRANT_ADMIN_ANY_SCHEMA (
-username => ’mviewadmin’);
+username => 'mviewadmin');
 END;
 
 GRANT COMMENT ANY TABLE TO mviewadmin;
@@ -2397,12 +2399,12 @@ TEMPORARY TABLESPACE temp;
 
 BEGIN
 DBMS_DEFER_SYS.REGISTER_PROPAGATOR (
-username => ’propagator’);
+username => 'propagator');
 END;
 
 --Create DB Links: as SYSTEM on calypso
 CREATE PUBLIC DATABASE LINK telesto.janus.fhnw.ch
-USING ’telesto’;
+USING 'telesto';
 
 -- for mviewadmin db link to proxy_mviewadmin on master site
 CONNECT mviewadmin@calypso;
@@ -2421,9 +2423,9 @@ CONNECT mviewadmin@calypso;
 BEGIN
 DBMS_DEFER_SYS.SCHEDULE_PURGE (
 next_date => SYSDATE,
-interval => ’SYSDATE + 1/24’,
+interval => 'SYSDATE + 1/24',
 delay_seconds => 0,
-rollback_segment => ’’);
+rollback_segment => '');
 END;  
 \end{lstlisting}
 
@@ -2443,30 +2445,30 @@ CONNECT repadmin@telesto
 
 BEGIN
 DBMS_REPCAT.CREATE_MASTER_REPGROUP (
-gname => ’mvdbsx2_repg’);
+gname => 'mvdbsx2_repg');
 END;
 
 BEGIN
 DBMS_REPCAT.CREATE_MASTER_REPOBJECT (
-gname => ’mvdbsx2_repg’,
-type => ’TABLE’,
-oname => ’filialen’,
-sname => ’mvdbsx2’,
+gname => 'mvdbsx2_repg',
+type => 'TABLE',
+oname => 'filialen',
+sname => 'mvdbsx2',
 use_existing_object => TRUE,
 Copy_rows => FALSE);
 END;
 
 BEGIN
 DBMS_REPCAT.GENERATE_REPLICATION_SUPPORT (
-sname => ’mvdbsx2’,
-oname => ’filialen’,
-type => ’TABLE’,
+sname => 'mvdbsx2',
+oname => 'filialen',
+type => 'TABLE',
 min_communication => TRUE);
 END;
 
 BEGIN
 DBMS_REPCAT.RESUME_MASTER_ACTIVITY (
-gname => ’mvdbsx2_repg’);
+gname => 'mvdbsx2_repg');
 END;
 
 \end{lstlisting}
@@ -2499,21 +2501,21 @@ CONNECT mviewadmin@calypso
 
 BEGIN
 DBMS_REPCAT.CREATE_MVIEW_REPGROUP (
-gname => ’mvdbsx2_repg’,
-master => ’telesto.janus.fhnw.ch’,
-propagation_mode => ’ASYNCHRONOUS’);
+gname => 'mvdbsx2_repg',
+master => 'telesto.janus.fhnw.ch',
+propagation_mode => 'ASYNCHRONOUS');
 END;
 /
 -- create refresh group
 -- with scheduled refresh
 BEGIN
 DBMS_REFRESH.MAKE (
-name => ’mviewadmin.mvdbsx2_refg’,
-list => ’’,
+name => 'mviewadmin.mvdbsx2_refg',
+list => '',
 next_date => SYSDATE,
-interval => ’SYSDATE + 1/24’,
+interval => 'SYSDATE + 1/24',
 implicit_destroy => FALSE,
-rollback_seg => ’’,
+rollback_seg => '',
 push_deferred_rpc => TRUE,
 refresh_after_errors => FALSE);
 END;
@@ -2532,18 +2534,18 @@ CONNECT mviewadmin@calypso
 
 BEGIN
 DBMS_REPCAT.CREATE_MVIEW_REPOBJECT (
-gname => ’mvdbsx2_repg’,
-sname => ’mvdbsx2’,
-oname => ’filialen’,
-type => ’SNAPSHOT’,
+gname => 'mvdbsx2_repg',
+sname => 'mvdbsx2',
+oname => 'filialen',
+type => 'SNAPSHOT',
 min_communication => TRUE);
 END;
 /
 -- as mviewadmin
 BEGIN
 DBMS_REFRESH.ADD(
-name => ’mviewadmin.mvdbsx2_refg’,
-list => ’mvdbsx2.filialen’,
+name => 'mviewadmin.mvdbsx2_refg',
+list => 'mvdbsx2.filialen',
 lax => TRUE);
 END;
 /
@@ -2551,7 +2553,7 @@ END;
 -- as mviewadmin
 BEGIN
 DBMS_REFRESH.REFRESH (
-name => ’mviewadmin.mvdbsx2_refg’ );
+name => 'mviewadmin.mvdbsx2_refg' );
 end;
 /
 \end{lstlisting}

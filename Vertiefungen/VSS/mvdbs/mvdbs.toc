@@ -131,7 +131,7 @@
 \contentsline {section}{\numberline {14.4}Erstellen von Master View Group}{73}
 \contentsline {section}{\numberline {14.5}L\IeC {\"o}sungen der Konflikte}{74}
 \contentsline {subsection}{\numberline {14.5.1}Update Konflikt L\IeC {\"o}sung}{74}
-\contentsline {subsection}{\numberline {14.5.2}uniqueness Konflikt L\IeC {\"o}sung}{75}
+\contentsline {subsection}{\numberline {14.5.2}Uniqueness Konflikt L\IeC {\"o}sung}{75}
 \contentsline {subsection}{\numberline {14.5.3}Delete Konflikt}{75}
 \contentsline {chapter}{\numberline {15}Lab 11 - Relationale Operationen mit Map Reduce}{77}
 \contentsline {section}{\numberline {15.1}Aufgabenstellung}{77}
