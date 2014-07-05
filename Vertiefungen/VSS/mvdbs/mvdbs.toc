@@ -103,24 +103,24 @@
 \contentsline {subsection}{\numberline {10.5.1}RDF - Resource Description Framework}{57}
 \contentsline {section}{\numberline {10.6}RDF und OWL}{58}
 \contentsline {part}{\numberline {II}Labs}{59}
-\contentsline {section}{\numberline {10.7}Lab 1 - Trigger}{60}
-\contentsline {subsection}{\numberline {10.7.1}Event Logging}{60}
-\contentsline {subsubsection}{\nonumberline Aufgabenstellung}{60}
-\contentsline {subsubsection}{\nonumberline L\IeC {\"o}sung}{60}
-\contentsline {subsubsection}{\nonumberline L\IeC {\"o}sungsbeschrieb}{62}
-\contentsline {subsection}{\numberline {10.7.2}Referential Integrity}{62}
-\contentsline {subsubsection}{\nonumberline Aufgabenstellung}{62}
-\contentsline {subsubsection}{\nonumberline L\IeC {\"o}sung}{62}
-\contentsline {subsubsection}{\nonumberline L\IeC {\"o}sungsbeschrieb}{63}
-\contentsline {section}{\numberline {10.8}Lab 3 - Verteilter Datenbankentwurf}{63}
-\contentsline {subsection}{\numberline {10.8.1}Aufgabenstellung}{63}
-\contentsline {subsection}{\numberline {10.8.2}L\IeC {\"o}sung}{64}
-\contentsline {subsection}{\numberline {10.8.3}L\IeC {\"o}sungsbeschrieb}{64}
-\contentsline {subsubsection}{\nonumberline Weg zur globalen Affinit\IeC {\"a}t}{64}
-\contentsline {section}{\numberline {10.9}Lab 11 - Relationale Operationen mit Map Reduce}{66}
-\contentsline {subsection}{\numberline {10.9.1}Aufgabenstellung}{66}
-\contentsline {subsection}{\numberline {10.9.2}Group by mit Count}{66}
-\contentsline {subsection}{\numberline {10.9.3}Join}{68}
-\contentsline {subsection}{\numberline {10.9.4}L\IeC {\"o}sungsbeschrieb}{71}
-\contentsline {subsubsection}{\nonumberline Group by mit Count}{71}
-\contentsline {subsubsection}{\nonumberline Join}{71}
+\contentsline {chapter}{\numberline {11}Lab 1 - Trigger}{60}
+\contentsline {section}{\numberline {11.1}Event Logging}{60}
+\contentsline {subsubsection}{Aufgabenstellung}{60}
+\contentsline {subsubsection}{L\IeC {\"o}sung}{60}
+\contentsline {subsubsection}{L\IeC {\"o}sungsbeschrieb}{62}
+\contentsline {subsection}{\numberline {11.1.1}Referential Integrity}{62}
+\contentsline {subsubsection}{Aufgabenstellung}{62}
+\contentsline {subsubsection}{L\IeC {\"o}sung}{62}
+\contentsline {subsubsection}{L\IeC {\"o}sungsbeschrieb}{63}
+\contentsline {section}{\numberline {11.2}Lab 3 - Verteilter Datenbankentwurf}{63}
+\contentsline {subsection}{\numberline {11.2.1}Aufgabenstellung}{63}
+\contentsline {subsection}{\numberline {11.2.2}L\IeC {\"o}sung}{64}
+\contentsline {subsection}{\numberline {11.2.3}L\IeC {\"o}sungsbeschrieb}{64}
+\contentsline {subsubsection}{Weg zur globalen Affinit\IeC {\"a}t}{64}
+\contentsline {section}{\numberline {11.3}Lab 11 - Relationale Operationen mit Map Reduce}{66}
+\contentsline {subsection}{\numberline {11.3.1}Aufgabenstellung}{66}
+\contentsline {subsection}{\numberline {11.3.2}Group by mit Count}{66}
+\contentsline {subsection}{\numberline {11.3.3}Join}{68}
+\contentsline {subsection}{\numberline {11.3.4}L\IeC {\"o}sungsbeschrieb}{71}
+\contentsline {subsubsection}{Group by mit Count}{71}
+\contentsline {subsubsection}{Join}{71}
