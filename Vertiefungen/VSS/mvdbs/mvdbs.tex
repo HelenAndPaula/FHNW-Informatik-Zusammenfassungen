@@ -107,6 +107,32 @@
 }
 \setuptoc{toc}{leveldown}
 
+\lstdefinestyle{java}{
+   language=Java,
+   basicstyle=\footnotesize\ttfamily, % Standardschrift
+   backgroundcolor=\color[RGB]{230,230,230}, % Hintergrundfarbe
+   numbers=left,               % Ort der Zeilennummern
+   numberstyle=\tiny,          % Stil der Zeilennummern
+   stepnumber=1,               % Abstand zwischen den Zeilennummern
+   numbersep=5pt,              % Abstand der Nummern zum Text
+   tabsize=2,                  % Groesse von Tabs
+   extendedchars=true,         % Erlaubt non-ascii Charakter, aber nicht mit UTF8
+   literate={ä}{{\"a}}1 {ü}{{\"u}}1 {ö}{{\"o}}1,
+   breaklines=true,            % Zeilen werden Umgebrochen
+   frame=trbl,                 % Rahmen
+   stringstyle=\color[RGB]{42,0,255} \ttfamily, % Farbe der String
+   keywordstyle=\color[RGB]{127,0,85} \ttfamily, % Farbe der Keywords
+   commentstyle=\color[RGB]{63,127,95} \ttfamily, % Farbe des Kommentars
+   showspaces=false,           % Leerzeichen anzeigen ?
+   showtabs=false,             % Tabs anzeigen ?
+   xleftmargin=17pt,
+   framexleftmargin=17pt,
+   framexrightmargin=5pt,
+   framexbottommargin=5pt,
+   framextopmargin=5pt,
+   showstringspaces=false,     % Leerzeichen in Strings anzeigen ?
+}
+
 \begin{document}
  \maketitle
  \tableofcontents
@@ -1462,6 +1488,108 @@ Irgendwann nach dem Commit: an alle Knoten die
 
 % chapter replikation_i (end)
 
+\chapter{Replikation II ( Mat Views)} % (fold)
+\label{cha:replikation_ii}
+Eine Updatable Materialized View Replication entspricht einer Lazy Group (asynchronous,
+update everywhere) Replikation.
+Eine Materialized View ist ein Replikat einer Master Tabelle bezogen auf einen bestimmten
+Zeitpunkt. Durch sog. Refreshs werden die Materialized View und bei einer Updatable Ma-
+terialized View Replication auch die Master Tabelle auf den neusten Stand gebracht, indem
+alle Änderungen seit dem letzten Refresh angewendet werden. Die Refreshs werden mit
+einem Pull/Push Verfahren auf der Seite der Materialized View durchgeführt.
+
+\section{Komponenten} % (fold)
+\begin{itemize}
+  \item Zur Replikationsumgebung gehören verschiedene Komponenten:
+\item Replication Objects
+\subitem Tables
+\subitem Materialized Views
+\item Replication Groups
+\subitem Master Groups
+\subitem Materialized View Groups
+\item Replication Sites
+\subitem Master Sites
+\subitem Materialized View Sites
+\end{itemize}
+\label{sec:komponenten}
+
+% section komponenten (end)
+\section{Komponenten} % (fold)
+\label{sec:komponenten}
+
+\begin{description}
+  \item[Replication Objects]sind Datenbankobjekte, die auf mehreren Knoten eines verteilten Da-
+tenbanksystems vorhanden sind. Änderungen an einem Objekt auf einem Knoten werden
+auf die Kopien an allen anderen Knoten angewendet. In einer Updatable Materialized View
+Replication Umgebung werden Tables und Materialized Views als Replication Objects un-
+terschieden.
+\item[Replication Groups] dienen der Verwaltung von Replication Objects. Eine Replication Group
+ist eine Sammlung von logisch zusammengehörenden Replication Objects. Typischerweise
+wird eine Replication Group erzeugt, um die Schema Objekte einer bestimmten Anwendung
+zu organisieren.
+\item[Replication Sites] sind die Instances, die an einer oder mehreren Replication Groups betei-
+ligt sind. Es werden zwei Grundtypen von Replication Sites unterschieden: Master Sites und
+Materialized View Sites. Eine Replication Group auf einem Master Site wird als Master Group
+bezeichnet. Eine Replication Group auf einem Materialized View Site basiert auf einer Mas-
+ter Group und wird als Materialized View Group bezeichnet. Zudem hat jede Master Group
+einen Master Definition Site. Von dort aus werden die Replication Group und die Replication
+Objects verwaltet.
+\end{description}
+% section komponenten (end)
+\section{Benutzer und Rollen} % (fold)
+\label{sec:benutzer_und_rollen}
+Die verschiedenen Aufgaben für den Betrieb einer Replikationsumgebung werden durch
+bestimmte Rollen wahrgenommen. Für eine Updatable Materialized View Replication Um-
+gebung sind dies:
+\begin{itemize}
+  \item Master Site
+  \subitem – Replication Administrator
+ \subitem Proxy Materialied View Administrator
+\subitem  Proxy Refresher
+\item Materialized View Site
+\subitem MView Administrator
+\subitem MView Propagator
+\subitem Refresher
+% section benutzer_und_rollen (end)
+\section{Master Site Strukturen} % (fold)
+\label{sec:master_site_strukturen}
+Die Master Table ist die Grundlage der Materialized View. Änderungen an einer Master Table
+werden im Materialized View Log aufgezeichnet, um bei einem Refresh zu der Materialized
+View übertragen zu werden.
+Ein interner After-Row-Trigger fügt bei jedem Insert, Update oder Delete der Master Table
+eine Zeile in das Materialized View Log ein.
+Im Materialized View Log werden die Änderungen an der Master Table aufgezeichnet. Das
+Log muss explizit erstellt werden, dabei wird eine zugrundeliegende Log-Tabelle erzeugt
+mit dem Namen:
+\begin{verbatim}
+   \texttt{MLOG$_Master_Table_Name}
+\end{verbatim}
+% section master_site_strukturen (end)
+\section{Materilized View Site Strukturen} % (fold)
+\label{sec:materilized_view_site_strukturen}
+Wird eine Materialized View erstellt, werden weitere Strukturen auf dem Materialized View
+Site angelegt.
+Zu jeder Materialized View wird ein Index mit Namen Materialized\_View\_Name\_PK angelegt,
+der dem Primärschlüssel der Master Table entspricht.
+Ein Updatable Materialized View Log:\\
+\begin{verbatim}
+   ( USLOG$_Materialized_View_Name)
+ \end{verbatim}  \\wird verwendet um
+zu bestimmen, welche Zeilen der Materialized View überschrieben oder entfernt werden
+müssen.
+Ein interner Trigger zeichnet die Änderungen an der Updatable Materialized View im Log
+auf.
+% section materilized_view_site_strukturen (end)
+\section{Konfliktauflösung} % (fold)
+\label{sec:konfliktaufl_sung}
+Werden Änderungen sowohl auf der Master Site als auch auf der Materialized View Si-
+te durchgeführt, kann es zu Konflikten kommen. Oracle bietet die Möglichkeit, für ver-
+schiedene Anforderungen spezielle Regeln zur Konfliktauflösung zu hinterlegen. Siehe da-
+zu das Kapitel 6 in Oracle Database Advanced Replication Management API Reference
+http://download.oracle.com/docs/cd/E11882_01/server.112/e10707/toc.htm
+% section konfliktaufl_sung (end)
+% chapter replikation_ii (end)
+
 \chapter{Nosql}
 
 \section{Einführung} % (fold)
@@ -1947,9 +2075,9 @@ einander in Beziehung stehen können.
 \label{prt:labs_}
 \chapter{Lab 1 - Trigger}
 \section{Event Logging}
-\subsubsection{Aufgabenstellung}
+\subsection{Aufgabenstellung}
 Manipulationen auf der Tabelle REGISTRIERUNGEN loggen. Trigger und Log-Tabelle befinden sich auf dem gleichen System wie REGISTRIERUNGEN.\\
-\subsubsection{Lösung}
+\subsection{Lösung}
 \begin{lstlisting}[style=sql, title=Log-Tabelle]
 -- Erste Möglichkeit
 CREATE TABLE registrierungen_log (
@@ -2043,7 +2171,7 @@ CREATE OR REPLACE TRIGGER registrierungen_change
   END
 ;
 \end{lstlisting}
-\subsubsection{Lösungsbeschrieb}
+\subsection{Lösungsbeschrieb}
 \begin{tabular}{| p{5cm} | p{5cm} | p{5cm} |}
 \hline
 Code & Zweck & Kommentar\\ \hline
@@ -2055,11 +2183,11 @@ SELECT USER INTO username FROM DUAL; & Zwei verschiedene Möglichkeiten Systemva
 :OLD.mnr & Falls die Granularität des Triggers auf Zeilenebene fest gelegt ist, kann durch :NEW und :OLD auf die Werte zugegriffen werden, die vor und nach der Manipulation in der Tabelle stehen würden.&\\ \hline
 INSERTING, DELETING, UPDATING & Können in einem WHEN-CASE verwendet werden, um abzufragen, bei welcher Operation der Trigger ausgelöst wurde. & Ist nur nötig, falls der Trigger bei mehr als eine Operation triggert.\\ \hline
 \end{tabular}
-\subsection{Referential Integrity}
-\subsubsection{Aufgabenstellung}
+\section{Referential Integrity}
+\subsection{Aufgabenstellung}
 In einer zentralisierten Datenbank (sämtliche Tabellen auf einem System) wird die referentielle Integrität vom Datenbanksystem überprüft. In einer verteilten Datenbank ist dies nicht mehr möglich, da die Datenbanksysteme voneinander getrennt sind. Die referentielle Integrität muss somit manuell über Trigger überprüft werden.\\
 Für die Aufgabe werden die Tabellen Filialen[PK:FNr] und DVDKopien[PK:DVDNr, FK1:FNr] behandelt.
-\subsubsection{Lösung}
+\subsection{Lösung}
 \begin{lstlisting}[style=sql, title=Link ananke <=> helios]
 CREATE DATABASE LINK orion.helios.fhnw.ch
 CONNECT TO mvdbs00 IDENTIFIED BY mvdbs00
@@ -2102,7 +2230,7 @@ CREATE OR REPLACE TRIGGER filialen_del_upd
     END IF;
   END;
 \end{lstlisting}
-\subsubsection{Lösungsbeschrieb}
+\subsection{Lösungsbeschrieb}
 \begin{tabular}{| p{5cm} | p{5cm} | p{5cm} |}
 \hline
 Voraussetzungen & Synonym von FILIALEN auf ananke & Auf dem ursprünglichen System muss eine  ein Synonym (inkl. Datenbanklink) zu FILIALEN auf helios bestehen, damit auf dessen Daten zugegriffen werden kann, um die Integrität zu überprüfen.\\ \hline
@@ -2110,8 +2238,8 @@ Trigger-Lokalität & \multicolumn{2}{p{10cm}|}{Die Trigger sollten auf den Syste
 RAISE\_APPLICATION\_ERROR(-20000, msg); & Hier wird eine Fehlermeldung erzeugt. & Der Code ist dabei entscheidend, was angezeigt wird. -20000 ist nicht obligatorisch für dieses Lab, ein Besseres konnte jedoch nicht auf die Schnelle gefunden werden.\\ \hline
 BEFORE & Logik des Triggers wird vor der Ausführung der Operation ausgeführt & In diesem Lab ist ein BEFORE-Trigger nötig, da durch das Werfen eines Fehlers die folgende Operationen abgebrochen wird.\\ \hline
 \end{tabular}
-\section{Lab 3 - Verteilter Datenbankentwurf}
-\subsection{Aufgabenstellung}
+\chapter{Lab 3 - Verteilter Datenbankentwurf}
+\section{Aufgabenstellung}
 Anhand von Anwendungen und deren Ausführungshäufigkeiten eine verteilte Datenbank entwerfen.\\
 \begin{lstlisting}[style=sql, title=Anwendungen]
 -- Anwendung q1
@@ -2145,7 +2273,7 @@ q3 & calypso & 5\\ \hline
 q4 & telesto & 10\\ \hline
 q5 & telesto & 15\\ \hline
 \end{tabular}
-\subsection{Lösung}
+\section{Lösung}
 \bigpic[Globale Affinität]{Labs/Lab3_VertikaleFragmentierung/lab3_global_aff.PNG}{17cm}
 \bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea.PNG}{18cm}
 \bigpic[Bond Energy Algorithm]{Labs/Lab3_VertikaleFragmentierung/lab3_bea2.PNG}{8cm}
@@ -2153,8 +2281,8 @@ q5 & telesto & 15\\ \hline
 \bigpic[Hilfsmatrizen]{Labs/Lab3_VertikaleFragmentierung/lab3_help.PNG}{17cm}
 \bigpic[Splitting und Fragmentierung]{Labs/Lab3_VertikaleFragmentierung/lab3_splitting_fragments.PNG}{18cm}
 \bigpic[Korrektheit]{Labs/Lab3_VertikaleFragmentierung/lab3_correctness.PNG}{18cm}
-\subsection{Lösungsbeschrieb}
-\subsubsection{Weg zur globalen Affinität}
+\section{Lösungsbeschrieb}
+\subsection{Weg zur globalen Affinität}
 Als Grundlage für die Usage Matrix dienen die Anwendung/Queries. Bei jedem Attribut, auf die ein Query zugreift, wird das Flag[1=true,0=false] in der Matrix gesetzt. Beim Zusammentragen der Attribute muss man sich darauf achten, dass nicht nur der Select berücksichtigt wird, sondern auch andere Zugriffe, wie zum Beispiel im Where.\\
 Die Zugriffshäufigkeitsmatrix wird durch das Zusammentragen der Informationen aus der Ausführungshäufigkeit der einzelnen Queries auf den einzelnen Systemen gebildet. Es ist ratsam für weitere Anwendung gleich eine Summe zu bilden, wie viel mal auf ein Query zugegriffen wird.\\
 Die Attributs-Affinität Matrix bildet nun sämtliche Attribute ab. Diese Matrix kann wie folgt ausgefüllt werden:
@@ -2182,29 +2310,407 @@ Es wurde die Matrix berechnet, die die grösste globale Affinität besitzt. Nun 
 \item zwei Parameter: gleich wie bei einem Parameter, nur muss mindestens die Bedingung für Spalten des ersten UND des zweiten Fragments zutreffen
 \end{itemize}
 Für das Splitting wählt man ebenfalls die Variante mit dem höchsten Wert aus und drückt es anschliessend in relationaler Algebra aus.
-\section{Lab 11 - Relationale Operationen mit Map Reduce}
-\subsection{Aufgabenstellung}
+
+\chapter{Lab 8 - Replikation und Konflikte}
+
+\section{Setup Master Site} % (fold)
+\label{sec:setup_master_site}
+\begin{enumerate}
+  \item Connect as System at Master Site
+  \item Replication Administrator anlegen
+  \item Rechte an Admin geben
+  \item Proxy User angeben
+\end{enumerate}
+
+\textbf{Bemerkung
+Diese Schritte sind schon durchgeführt worden! in der Übung aber könnten relevant sein}
+
+\begin{lstlisting}[style=sql,title=Master Site Setup]
+  ONNECT system@telesto
+ CREATE USER repadmin IDENTIFIED BY &password
+DEFAULT TABLESPACE studspace
+TEMPORARY TABLESPACE temp;
+BEGIN
+DBMS_REPCAT_ADMIN.GRANT_ADMIN_ANY_SCHEMA (
+username => ’repadmin’);
+END;
+
+BEGIN
+DBMS_REPCAT_ADMIN.REGISTER_USER_REPGROUP (
+username => ’repadmin’,
+privilege_type => ’receiver’,
+list_of_gnames => NULL);
+END;
+
+CREATE USER proxy_mviewadmin IDENTIFIED BY &password
+DEFAULT TABLESPACE studspace
+TEMPORARY TABLESPACE temp;
+-- any GRANTS?
+BEGIN
+DBMS_REPCAT_ADMIN.REGISTER_USER_REPGROUP (
+username => ’proxy_mviewadmin’,
+privilege_type => ’proxy_snapadmin’,
+list_of_gnames => NULL);
+END;
+
+CREATE USER proxy_refresher IDENTIFIED BY &password
+DEFAULT TABLESPACE studspace
+
+TEMPORARY TABLESPACE temp;
+
+GRANT CREATE SESSION TO proxy_refresher;
+GRANT SELECT ANY TABLE TO proxy_refresher;
+\end{lstlisting}
+% section setup_master_site (end)
+
+\section{Setup Materialized View Site} % (fold)
+\label{sec:setup_materialized_view_site}
+\begin{enumerate}
+  \item  Connect as System at Materialized View Site
+\item Users anlegen
+\item  Database Links erstellen
+\item  Schedule Purge
+\end{enumerate}
+
+\textbf{Bemerkung
+Diese Schritte sind schon durchgeführt worden! aber könnten relevant sein}
+
+
+\begin{lstlisting}[caption=Setup Materilized View Site (Updateable),style=sql]
+CONNECT system@calypso
+ CREATE USER mviewadmin IDENTIFIED BY &password
+DEFAULT TABLESPACE studspace
+TEMPORARY TABLESPACE temp;
+
+BEGIN
+DBMS_REPCAT_ADMIN.GRANT_ADMIN_ANY_SCHEMA (
+username => ’mviewadmin’);
+END;
+
+GRANT COMMENT ANY TABLE TO mviewadmin;
+GRANT LOCK ANY TABLE TO mviewadmin;
+
+
+CREATE USER propagator IDENTIFIED BY &password
+DEFAULT TABLESPACE studspace
+TEMPORARY TABLESPACE temp;
+
+BEGIN
+DBMS_DEFER_SYS.REGISTER_PROPAGATOR (
+username => ’propagator’);
+END;
+
+--Create DB Links: as SYSTEM on calypso
+CREATE PUBLIC DATABASE LINK telesto.janus.fhnw.ch
+USING ’telesto’;
+
+-- for mviewadmin db link to proxy_mviewadmin on master site
+CONNECT mviewadmin@calypso;
+
+CREATE DATABASE LINK telesto.janus.fhnw.ch
+CONNECT TO proxy_mviewadmin IDENTIFIED BY &password;
+
+-- for propagator db link to repadmin on master site
+CONNECT propagator@calypso
+
+CREATE DATABASE LINK telesto.janus.fhnw.ch
+CONNECT TO repadmin IDENTIFIED BY &password;
+-- as mviewadmin on calypso
+CONNECT mviewadmin@calypso;
+
+BEGIN
+DBMS_DEFER_SYS.SCHEDULE_PURGE (
+next_date => SYSDATE,
+interval => ’SYSDATE + 1/24’,
+delay_seconds => 0,
+rollback_segment => ’’);
+END;  
+\end{lstlisting}
+
+
+\section{Erstellen von Master Group} % (fold)
+\label{sec:erstellen_von_master_group}
+\begin{enumerate}
+  \item Schema an der Master Site erstellen
+\item Master Group erstellen
+\item  Objekte zur Master Group hinzufügen
+\item Replication Support einrichten
+\item  Replikation starten
+\end{enumerate}
+\begin{lstlisting}[caption=Erstellen von Master Group,style=sql]
+--  Diese Schritte müssen für neue Situation durchgeführt werden!
+CONNECT repadmin@telesto
+
+BEGIN
+DBMS_REPCAT.CREATE_MASTER_REPGROUP (
+gname => ’mvdbsx2_repg’);
+END;
+
+BEGIN
+DBMS_REPCAT.CREATE_MASTER_REPOBJECT (
+gname => ’mvdbsx2_repg’,
+type => ’TABLE’,
+oname => ’filialen’,
+sname => ’mvdbsx2’,
+use_existing_object => TRUE,
+Copy_rows => FALSE);
+END;
+
+BEGIN
+DBMS_REPCAT.GENERATE_REPLICATION_SUPPORT (
+sname => ’mvdbsx2’,
+oname => ’filialen’,
+type => ’TABLE’,
+min_communication => TRUE);
+END;
+
+BEGIN
+DBMS_REPCAT.RESUME_MASTER_ACTIVITY (
+gname => ’mvdbsx2_repg’);
+END;
+
+\end{lstlisting}
+% section erstellen_von_master_group (end)
+
+\section{Erstellen von Master View Group} % (fold)
+\label{sec:erstellen_von_master_view_group}
+\begin{enumerate}
+  \item Materialized View Logs an der Master Site erstellen
+\item Repliziertes Schema und Database Links erstellen
+\item  Materialized View Group erstellen
+\item  Refresh Group erstellen
+\item Objekte zur Materialized View Group hinzufügen
+\item Objekte zur Refresh Group hinzufügen
+\item Manuell Refresh durchführen
+\end{enumerate}
+\begin{lstlisting}[caption=Master View Group erstellen,style=sql]
+  -- Bemerkung Diese Schritte müssen für neue Situation durchgeführt werden!
+-- use dvd rental sample user mvdbsx2
+CONNECT mvdbsx2@telesto
+
+ CREATE MATERIALIZED VIEW LOG ON mvdbsx2.filialen;
+ -- for all owner db link to proxy_refresher on master site
+CONNECT mvdbsx2@calypso
+
+CREATE DATABASE LINK telesto.janus.fhnw.ch
+CONNECT TO proxy_refresher IDENTIFIED BY &password;
+-- create materialized view group
+CONNECT mviewadmin@calypso
+
+BEGIN
+DBMS_REPCAT.CREATE_MVIEW_REPGROUP (
+gname => ’mvdbsx2_repg’,
+master => ’telesto.janus.fhnw.ch’,
+propagation_mode => ’ASYNCHRONOUS’);
+END;
+/
+-- create refresh group
+-- with scheduled refresh
+BEGIN
+DBMS_REFRESH.MAKE (
+name => ’mviewadmin.mvdbsx2_refg’,
+list => ’’,
+next_date => SYSDATE,
+interval => ’SYSDATE + 1/24’,
+implicit_destroy => FALSE,
+rollback_seg => ’’,
+push_deferred_rpc => TRUE,
+refresh_after_errors => FALSE);
+END;
+/
+-- Add objects to the materialized view group
+-- as mvdbsx2
+CONNECT mvdbsx2@calypso
+
+CREATE MATERIALIZED VIEW mvdbsx2.filialen
+REFRESH FAST WITH PRIMARY KEY FOR UPDATE
+AS SELECT * FROM mvdbsx2.filialen@telesto.janus.fhnw.ch;
+
+-- add to rep group
+-- as mviewadmin
+CONNECT mviewadmin@calypso
+
+BEGIN
+DBMS_REPCAT.CREATE_MVIEW_REPOBJECT (
+gname => ’mvdbsx2_repg’,
+sname => ’mvdbsx2’,
+oname => ’filialen’,
+type => ’SNAPSHOT’,
+min_communication => TRUE);
+END;
+/
+-- as mviewadmin
+BEGIN
+DBMS_REFRESH.ADD(
+name => ’mviewadmin.mvdbsx2_refg’,
+list => ’mvdbsx2.filialen’,
+lax => TRUE);
+END;
+/
+-- refresh on demand
+-- as mviewadmin
+BEGIN
+DBMS_REFRESH.REFRESH (
+name => ’mviewadmin.mvdbsx2_refg’ );
+end;
+/
+\end{lstlisting}
+
+\section{Lösungen der Konflikte} % (fold)
+\label{sec:l_sungen_der_konflikte}
+
+\subsection{Update Konflikt Lösung}
+Im folgenden soll eine Update-Konflikt-Lösung\footnote{\url{http://docs.oracle.com/cd/E11882_01/server.112/e10707/rarconflictres.htm#REPMA354}} definiert werden, damit bei einem Update, ein allfälliger Konflikt automatisch behoben wird.
+
+Zusätzlich wird überprüft, dass bei einem INSERT- oder DELETE-Statement die Lösungsstrategie nicht angewendet wird.
+\begin{lstlisting}[style=sql, title=Definiton der Update-Konflikt-Lösung als repadmin auf telesto]
+BEGIN
+   DBMS_REPCAT.SUSPEND_MASTER_ACTIVITY (
+      gname => 'mvdbs02_repg');
+END;
+/
+
+BEGIN
+   DBMS_REPCAT.MAKE_COLUMN_GROUP (
+      sname => 'mvdbs02',
+      oname => 'filialen',
+      column_group => 'fil_cg',
+      list_of_column_names => 'fnr,ort,plz');
+END;
+/
+BEGIN
+   DBMS_REPCAT.ADD_UPDATE_RESOLUTION (
+      sname => 'mvdbs02',
+      oname => 'filialen',
+      column_group => 'fil_cg',
+      sequence_no => 1,
+      method => 'DISCARD',
+      parameter_column_name => 'fnr,ort,plz');
+END;
+/
+BEGIN 
+    DBMS_REPCAT.GENERATE_REPLICATION_SUPPORT (
+      sname => 'mvdbs02',
+      oname => 'filialen',
+      type => 'TABLE',
+      min_communication => TRUE); 
+END;
+/
+BEGIN
+   DBMS_REPCAT.RESUME_MASTER_ACTIVITY (
+      gname => 'mvdbs02_repg');
+END;
+/
+\end{lstlisting}
+
+\subsection{uniqueness Konflikt Lösung}
+\begin{lstlisting}[style=sql, title=Definition der Uniqueness-Konflikt-Lösung als repadmin auf telesto]
+BEGIN
+   DBMS_REPCAT.SUSPEND_MASTER_ACTIVITY (
+      gname => 'mvdbs02_repg');
+END;
+/
+
+BEGIN
+   DBMS_REPCAT.ADD_UNIQUE_RESOLUTION (
+      sname => 'mvdbs02',
+      oname => 'filialen',
+    constraint_name => 'fl_pk',
+      sequence_no => 1,
+      method => 'DISCARD',
+      parameter_column_name => 'fnr');
+END;
+/
+BEGIN 
+    DBMS_REPCAT.GENERATE_REPLICATION_SUPPORT (
+      sname => 'mvdbs02',
+      oname => 'filialen',
+      type => 'TABLE',
+      min_communication => TRUE); 
+END;
+/
+BEGIN
+   DBMS_REPCAT.RESUME_MASTER_ACTIVITY (
+      gname => 'mvdbs02_repg');
+END;
+/
+\end{lstlisting}
+
+\subsection{Delete Konflikt}
+Im folgenden soll eine Delete-Konflikt-Lösung definiert werden, damit bei einem DELETE-Statement, welches einen Konflikt auslöst, diesen automatisch behebt. Bei der Delete-Konflikt-Lösung wir eine User-Funktion\footnote{\url{http://docstore.mik.ua/orelly/oracle/bipack/ch16_05.htm}} benötigt, die den Konflikt löst.
+\begin{lstlisting}[style=sql, title=Definiton des Konflikt-Lösungs-Handler als repadmin auf telesto]
+CREATE OR REPLACE FUNCTION mvdbs02_fl_delete_handler (
+    old_fnr IN OUT VARCHAR2,
+    old_ort IN OUT VARCHAR2,
+    old_plz IN OUT VARCHAR2,
+    ignore_discard_flag OUT BOOLEAN ) RETURN BOOLEAN IS
+
+  BEGIN
+    DELETE FROM mvdbs02.filialen
+    WHERE fnr = old_fnr;
+
+    ignore_discard_flag := TRUE;
+
+    RETURN TRUE;
+  END mvdbs02_fl_delete_handler;
+\end{lstlisting}
+
+\begin{lstlisting}[style=sql, title=Definiton der Delete-Konflikt-Lösung als repadmin auf telesto]
+BEGIN
+   DBMS_REPCAT.SUSPEND_MASTER_ACTIVITY (
+      gname => 'mvdbs02_repg');
+END;
+/
+BEGIN
+  DBMS_REPCAT.ADD_DELETE_RESOLUTION(
+      sname => 'mvdbs02',
+      oname => 'filialen',
+      sequence_no => 1,
+      parameter_column_name => 'fnr,ort,plz',
+      function_name => 'mvdbs02_fl_delete_handler');
+END;
+/
+BEGIN 
+    DBMS_REPCAT.GENERATE_REPLICATION_SUPPORT (
+      sname => 'mvdbs02',
+      oname => 'filialen',
+      type => 'TABLE',
+      min_communication => TRUE); 
+END;
+/
+BEGIN
+   DBMS_REPCAT.RESUME_MASTER_ACTIVITY (
+      gname => 'mvdbs02_repg');
+END;
+/
+\end{lstlisting}
+
+% section l_sungen_der_konflikte (end)
+
+% section erstellen_von_master_view_group (end)
+\chapter{Lab 11 - Relationale Operationen mit Map Reduce}
+\section{Aufgabenstellung}
 Tabellen werden im csv-Format abgegeben. Nun können SQL-Befehler als Map/Reduce-Funktionen in einer Hadoop Umgebung realisiert werden.
-\subsection{Group by mit Count}
+\section{Group by mit Count}
 \begin{lstlisting}[style=sql]
 SELECT mnr, COUNT(*)
 FROM registrierungen
 GROUP BY mnr;
 \end{lstlisting}
-\lstinputlisting[language=java,firstline=18,style=java]{Labs/Lab11_MapReduce/GroupByWithCount.java}
-\subsection{Join}
+\lstinputlisting[language=java,style=java,firstline=18,style=java]{Labs/Lab11_MapReduce/GroupByWithCount.java}
+\section{Join}
 \begin{lstlisting}[style=sql]
 SELECT *
 FROM registrierungen JOIN mitglieder USING (mnr);
 \end{lstlisting}
-\lstinputlisting[language=java,firstline=19,style=java]{Labs/Lab11_MapReduce/Join.java}
-\lstinputlisting[language=java,firstline=8,style=java]{Labs/Lab11_MapReduce/DatasetTagger.java}
+\lstinputlisting[language=java,style=java,firstline=19,style=java]{Labs/Lab11_MapReduce/Join.java}
+\lstinputlisting[language=java,style=java,firstline=8,style=java]{Labs/Lab11_MapReduce/DatasetTagger.java}
 \subsection{Lösungsbeschrieb}
 \subsubsection{Group by mit Count}
 In diesem Algorithmus muss ausgerechnet werden, wie viel mal eine bestimmte Spalte im csv-File vorkommt.\\
 Der Mapper bekommt nun jede Reihe vom csv-File einzeln. Somit kann diese Linie aufgesplittet und der gewünschte Index extrahiert werden. Dieser extrahierte Wert wird in ein Text-Objekt gewrappt und mit einer 1, gewrappt in ein IntWritable, in den Context geschrieben.\\
 Der Reducer bekommt als key-value Paar ein Text, der den gewünschte Index erhaltet und eine List von Einsen, die der Mapper in den Context geschrieben hat. Aus dieser Liste kann nun ermittelt werden, wie viel mal das Wort im csv-File vorgekommen ist. Als Resultat wird wiederum der Text mit der Summer in den Context geschrieben. Dieser Wert wird dann auf der Konsole ausgegeben.
-\subsubsection{Join}
+\subsection{Join}
 Der Reduce-Side Join verlangt, dass der eigentliche Join im Reducer durchgeführt werden muss. Der Mapper ist somit für die Zuordnung der Datensätze zum Join-Key zuständig. Damit zusätzlich ein Left-Join erreicht werden kann, muss der ValueOut des Mappers gekennzeichnet werden, von welcher Seite, bzw. welchem File die Zeile stammt. Dies setzt eine eigene Datenstruktur voraus, die zusätzlich vom Hadoop erkannt werden muss. Als Attribute muss ein Datenelement einen String, sowie eine Enumeration beinhalten. Die Enumeration definiert dabei von welcher Seite des Joins es stammt. Dadurch ist es möglich, im Reducer das Konkatenieren des Endresultats nach den Regeln eines Left-Joins durchzuführen. Damit Hadoop diese Datenstruktur als ValueOut des Mappers erkennt, muss dieser als MapOutputValue konfiguriert werden.
 % part labs_ (end)
 \end{document}
