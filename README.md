@@ -59,5 +59,5 @@ Weiter gute Repos mit Implementationen von Übungen sind folgende:
 ### webfr
 - [Roland Hediger](https://github.com/rolandhediger/webfr_solutions)
 
-### brerl
+### bverl
 - [Fabio Oesch](https://github.com/fabio-oesch/fhnw.bver)
